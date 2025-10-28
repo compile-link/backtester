@@ -1,7 +1,11 @@
-#include "backtester.hpp"
+#include "Backtester.hpp"
+#include "Data.hpp"
+#include <iostream>
 
 int main() {
-    Backtester backtester;
+    Data data;
+    Backtester backtester(data);
     backtester.run();
+    std::cout << "Program finished successfully\n"; 
     return 0;
 }
