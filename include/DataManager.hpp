@@ -9,14 +9,15 @@ struct OHLC {
     double close;
 };
 
-class Data {
+class DataManager {
     public:
-        Data(){
+        DataManager(){
             // std::cout << "read csv should be here\n";
             readCSV("file.txt");
         }
-        bool readCSV(const std::string& filename);
+        bool readCSV(const std::string& path);
+        std::vector<OHLC> getData() { return candles_; }
         
     private:
-        std::vector<OHLC> data; // data read from file, stored in memory
+        std::vector<OHLC> candles_; // data read from file, stored in memory
 };

@@ -1,10 +1,10 @@
 #include "Backtester.hpp"
-#include "Data.hpp"
+#include "DataManager.hpp"
 #include <iostream>
 
 int main() {
-    Data data;
-    Backtester backtester(data);
+    DataManager dataManager;
+    Backtester backtester(dataManager);
     backtester.run();
     std::cout << "Program finished successfully\n"; 
     return 0;
