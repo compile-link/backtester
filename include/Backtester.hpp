@@ -5,10 +5,9 @@
 
 class Backtester {
     public:
-        Backtester(DataManager& d): dataManager(d){};
+        Backtester(DataManager& dm): dataManager(dm){};
         void run();         
     private:
-        //std::unique_ptr<Data> data;
         DataManager& dataManager;
         Strategy strategy;
         Wallet wallet;

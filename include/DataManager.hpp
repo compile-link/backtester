@@ -2,7 +2,8 @@
 #include <vector>
 #include <string>
 
-struct OHLC {
+struct Candle {
+    std::string date;
     double open;
     double high;
     double low;
@@ -12,12 +13,12 @@ struct OHLC {
 class DataManager {
     public:
         DataManager(){
-            // std::cout << "read csv should be here\n";
-            readCSV("file.txt");
+            readCSV(kFilePath_);
         }
         bool readCSV(const std::string& path);
-        std::vector<OHLC> getData() { return candles_; }
+        std::vector<Candle> getData() { return candles_; }
         
     private:
-        std::vector<OHLC> candles_; // data read from file, stored in memory
+        static constexpr const char* kFilePath_ = "../data/eurusd_d.csv"; 
+        std::vector<Candle> candles_; // data read from file, stored in memory
 };

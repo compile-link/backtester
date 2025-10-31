@@ -18,7 +18,9 @@ bool DataManager::readCSV(const std::string& path){
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string data;
-        OHLC candle;
+        Candle candle;
+
+        std::getline(ss, candle.date, ','); 
 
         std::getline(ss, data, ','); 
         candle.open = std::stod(data);
@@ -36,6 +38,7 @@ bool DataManager::readCSV(const std::string& path){
     }
 
     file.close();
+    
     std::cout << "Done!\n";
 
     return !candles_.empty();
