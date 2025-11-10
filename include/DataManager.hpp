@@ -13,9 +13,9 @@ struct Candle {
 class DataManager {
     public:
         DataManager(){
-            readCSV(kFilePath_);
+            loadData(kFilePath_);
         }
-        bool readCSV(const std::string& path);
+        bool loadData(const std::string& path);
         std::vector<Candle> getData() { return candles_; }
         
     private:

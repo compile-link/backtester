@@ -21,5 +21,7 @@ void Backtester::run() {
        << c.close << "\n"; 
     }
     
+    strategy->signal();
+    
     std::cout << "Bactester finished\n";
 }

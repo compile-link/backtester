@@ -3,8 +3,8 @@
 #include <fstream>
 #include <sstream>
 
-bool DataManager::readCSV(const std::string& path){
-    std::cout << "Reading csv file... ";
+bool DataManager::loadData(const std::string& path){
+    std::cout << "Reading csv file... \n";
     
     std::ifstream file(path);
     if(!file.is_open()) {
@@ -15,6 +15,7 @@ bool DataManager::readCSV(const std::string& path){
     std::string line;
 
     std::getline(file, line); // skip header
+    std::cout << line << "\n";
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string data;
@@ -39,7 +40,7 @@ bool DataManager::readCSV(const std::string& path){
 
     file.close();
     
-    std::cout << "Done!\n";
+    std::cout << "Done!\n\n";
 
     return !candles_.empty();
 }

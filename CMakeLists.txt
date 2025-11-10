@@ -6,6 +6,6 @@ add_executable(backtester
  src/Backtester.cpp
  src/DataManager.cpp
  src/PositionManager.cpp
- src/Strategy.cpp
+ src/StrategyMA.cpp
 )
 target_include_directories(backtester PRIVATE include)
