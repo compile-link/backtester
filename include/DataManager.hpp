@@ -1,14 +1,7 @@
 #pragma once
-#include <vector>
-#include <string>
 
-struct Candle {
-    std::string date;
-    double open;
-    double high;
-    double low;
-    double close;
-};
+#include "Candle.hpp"
+#include <vector>
 
 class DataManager {
     public:
@@ -16,7 +9,7 @@ class DataManager {
             loadData(kFilePath_);
         }
         bool loadData(const std::string& path);
-        std::vector<Candle> getData() { return candles_; }
+        const std::vector<Candle>& getCandles() const { return candles_; }
         
     private:
         static constexpr const char* kFilePath_ = "../data/eurusd_d.csv"; 

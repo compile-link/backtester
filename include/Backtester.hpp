@@ -1,4 +1,5 @@
 #pragma once
+
 #include "DataManager.hpp"
 #include "Strategy.hpp"
 #include "Wallet.hpp"
@@ -14,4 +15,6 @@ class Backtester {
         DataManager& dataManager;
         std::unique_ptr<Strategy> strategy;
         Wallet wallet;
+        
+        void showData();
 };

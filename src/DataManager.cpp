@@ -4,6 +4,8 @@
 #include <sstream>
 
 bool DataManager::loadData(const std::string& path){
+
+    std::cout << "----------------------\n";
     std::cout << "Reading csv file... \n";
     
     std::ifstream file(path);
@@ -40,7 +42,8 @@ bool DataManager::loadData(const std::string& path){
 
     file.close();
     
-    std::cout << "Done!\n\n";
+    std::cout << "Done!\n";
+    std::cout << "----------------------\n";
 
     return !candles_.empty();
 }
