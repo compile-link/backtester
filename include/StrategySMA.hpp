@@ -12,13 +12,13 @@ enum class CandleCloseSide {
 
 class StrategySMA: public Strategy {
     public:
-        explicit StrategySMA(size_t p = DEFAULT_PERIOD);
+        explicit StrategySMA(size_t p = kDefaultPeriod);
 
         Signal onCandle(const Candle& candle) override; 
         
 
     private:
-        static constexpr size_t DEFAULT_PERIOD = 14;
+        static constexpr size_t kDefaultPeriod = 14;
         size_t period_ = 0;
         std::vector<double> smaPoints_; 
         double sma_ = 0;

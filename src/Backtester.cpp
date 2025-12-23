@@ -1,6 +1,9 @@
 #include "Backtester.hpp"
 #include <iostream>
 
+Backtester::Backtester(DataManager& dataManager, std::unique_ptr<Strategy> strategy)
+    : dataManager_(dataManager), strategy_(std::move(strategy)) {}
+
 void Backtester::run() {
     std::cout << "----------------------\n";
     std::cout << "Backtester started\n" << std::endl;
@@ -9,8 +12,8 @@ void Backtester::run() {
     
     Signal signal;
     size_t index = 0;
-    for(const auto& candle : dataManager.getCandles()){
-        signal = strategy->onCandle(candle);
+    for(const auto& candle : dataManager_.getCandles()){
+        signal = strategy_->onCandle(candle);
         
         switch(signal) { 
             case Signal::Buy:
@@ -37,7 +40,7 @@ void Backtester::showData(){
     std::cout << "-----\n";
     std::cout << "Backtester data\n" << std::endl;
 
-    const auto& candles = dataManager.getCandles();   
+    const auto& candles = dataManager_.getCandles();   
     std::cout << "Number of data points: " << candles.size() << "\n";
     std::cout << "Start date:            " << candles.front().date << "\n";
     std::cout << "End date:              " << candles.back().date << "\n";

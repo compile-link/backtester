@@ -8,13 +8,11 @@
 
 class Backtester {
     public:
-        Backtester(DataManager& dm, std::unique_ptr<Strategy> s)
-            : dataManager(dm), strategy(std::move(s)){};
+        explicit Backtester(DataManager& dataManager, std::unique_ptr<Strategy> strategy);
         void run();         
     private:
-        DataManager& dataManager;
-        std::unique_ptr<Strategy> strategy;
-        Wallet wallet;
+        DataManager& dataManager_;
+        std::unique_ptr<Strategy> strategy_;
         
         void showData();
 };

@@ -1,13 +1,15 @@
 #pragma once
+
 #include "Wallet.hpp"
 
 class PositionManager{
     public:
-        PositionManager(Wallet& w) : wallet(w) {};
+        // explicit PositionManager(double initialBalance);
+        explicit PositionManager(Wallet& wallet);
         
         bool openPosition(double price);
         bool closePosition(double price);
 
     private:
-       Wallet& wallet; 
+       Wallet& wallet_; 
 };
