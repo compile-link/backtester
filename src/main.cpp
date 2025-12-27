@@ -4,9 +4,14 @@
 #include <iostream>
 
 int main() {
-    DataManager dataManager;
     auto strategySMA = std::make_unique<StrategySMA>();
-    Backtester backtester(dataManager, std::move(strategySMA));
+
+    BacktestContext ctx = {
+        DataManager{},
+        PositionManager{},
+        std::move(strategySMA)
+    };
+    Backtester backtester(std::move(ctx));
     backtester.run();
     std::cout << "Program finished successfully\n"; 
     return 0;

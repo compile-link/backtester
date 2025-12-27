@@ -4,12 +4,11 @@
 
 class PositionManager{
     public:
-        // explicit PositionManager(double initialBalance);
-        explicit PositionManager(Wallet& wallet);
+        explicit PositionManager();
         
         bool openPosition(double price);
         bool closePosition(double price);
 
     private:
-       Wallet& wallet_; 
+       Wallet wallet_;
 };

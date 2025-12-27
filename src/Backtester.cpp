@@ -1,8 +1,8 @@
 #include "Backtester.hpp"
 #include <iostream>
 
-Backtester::Backtester(DataManager& dataManager, std::unique_ptr<Strategy> strategy)
-    : dataManager_(dataManager), strategy_(std::move(strategy)) {}
+Backtester::Backtester(BacktestContext ctx)
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
 
 void Backtester::run() {
     std::cout << "----------------------\n";

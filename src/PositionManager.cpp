@@ -1,7 +1,7 @@
 #include "PositionManager.hpp"
 #include <iostream>
 
-PositionManager::PositionManager(Wallet& wallet) : wallet_(wallet) {};
+PositionManager::PositionManager(){};
 
 bool PositionManager::openPosition(double price){
     std::cout << "Position open with price " << price << std::endl;

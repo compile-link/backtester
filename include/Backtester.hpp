@@ -2,16 +2,24 @@
 
 #include "DataManager.hpp"
 #include "Strategy.hpp"
-#include "Wallet.hpp"
+#include "PositionManager.hpp"
 
 #include <memory>
 
+struct BacktestContext {
+    DataManager dataManager;
+    PositionManager positionManager;
+    std::unique_ptr<Strategy> strategy;
+};
+
+
 class Backtester {
     public:
-        explicit Backtester(DataManager& dataManager, std::unique_ptr<Strategy> strategy);
+        explicit Backtester(BacktestContext ctx);
         void run();         
     private:
         DataManager& dataManager_;
+        PositionManager& positionManager_;
         std::unique_ptr<Strategy> strategy_;
         
         void showData();
