@@ -2,6 +2,7 @@
 
 #include "DataManager.hpp"
 #include "Strategy.hpp"
+#include "StrategySMA.hpp"
 #include "PositionManager.hpp"
 
 #include <memory>
@@ -9,7 +10,8 @@
 struct BacktestContext {
     DataManager dataManager;
     PositionManager positionManager;
-    std::unique_ptr<Strategy> strategy;
+    // std::unique_ptr<Strategy> strategy;
+    StrategySMA strategy;
 };
 
 
@@ -20,7 +22,8 @@ class Backtester {
     private:
         DataManager& dataManager_;
         PositionManager& positionManager_;
-        std::unique_ptr<Strategy> strategy_;
+        // std::unique_ptr<Strategy> strategy_;
+        Strategy& strategy_;
         
         void showData();
 };

@@ -2,7 +2,8 @@
 #include <iostream>
 
 Backtester::Backtester(BacktestContext ctx)
-    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
+    // : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy) {}
 
 void Backtester::run() {
     std::cout << "----------------------\n";
@@ -13,7 +14,8 @@ void Backtester::run() {
     Signal signal;
     size_t index = 0;
     for(const auto& candle : dataManager_.getCandles()){
-        signal = strategy_->onCandle(candle);
+        // signal = strategy_->onCandle(candle);
+        signal = strategy_.onCandle(candle);
         
         switch(signal) { 
             case Signal::Buy:
