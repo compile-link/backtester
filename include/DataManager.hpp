@@ -5,9 +5,7 @@
 
 class DataManager {
     public:
-        DataManager(){
-            loadData(kFilePath);
-        }
+        explicit DataManager();
         bool loadData(const std::string& path);
         const std::vector<Candle>& getCandles() const { return candles_; }
         

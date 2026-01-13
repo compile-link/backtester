@@ -3,21 +3,25 @@
 #include <fstream>
 #include <sstream>
 
+DataManager::DataManager(){
+    loadData(kFilePath);
+}
+
 bool DataManager::loadData(const std::string& path){
 
     std::cout << "----------------------\n";
-    std::cout << "Reading csv file... \n";
+    std::cout << "Reading csv file " << path << "\n";
     
     std::ifstream file(path);
     if(!file.is_open()) {
         std::cerr << "Error: can't open file " << path << "\n";
         return false;
     }
-    
+
     std::string line;
 
     std::getline(file, line); // skip header
-    std::cout << line << "\n";
+    // std::cout << line << "\n";
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string data;

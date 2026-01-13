@@ -17,7 +17,7 @@ struct BacktestContext {
 
 class Backtester {
     public:
-        explicit Backtester(BacktestContext ctx);
+        explicit Backtester(BacktestContext& ctx);
         void run();         
     private:
         DataManager& dataManager_;

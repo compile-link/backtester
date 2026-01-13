@@ -1,6 +1,6 @@
 #include "Backtester.hpp"
-#include "DataManager.hpp"
-#include "StrategySMA.hpp"
+// #include "DataManager.hpp"
+// #include "StrategySMA.hpp"
 #include <iostream>
 
 int main() {

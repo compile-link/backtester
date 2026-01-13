@@ -1,7 +1,7 @@
 #include "Backtester.hpp"
 #include <iostream>
 
-Backtester::Backtester(BacktestContext ctx)
+Backtester::Backtester(BacktestContext& ctx)
     // : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
     : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy) {}
 
@@ -34,7 +34,6 @@ void Backtester::run() {
     }
     
     std::cout << "Final index: " << index << "\n";
-    std::cout << "Done!\n";
     std::cout << "----------------------\n";
 }
 
@@ -47,7 +46,8 @@ void Backtester::showData(){
     std::cout << "Start date:            " << candles.front().date << "\n";
     std::cout << "End date:              " << candles.back().date << "\n";
     
-    const auto candlesCount = 4;
+    // const auto candlesCount = 4;
+    const auto candlesCount = 1;
     size_t count = 1;
     for (const auto& c : candles) {
        if(count >= candlesCount) break;
@@ -59,6 +59,5 @@ void Backtester::showData(){
        << c.close << "\n"; 
     }
     
-    std::cout << "Done!\n";
     std::cout << "-----\n";
 }
