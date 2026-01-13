@@ -19,12 +19,14 @@ void Backtester::run() {
         
         switch(signal) { 
             case Signal::Buy:
-                std::cout << "\n=====\nCandle index: " << index;
-                std::cout << "\nBuy\n=====\n";
+                std::cout << "\n=====\nCandle index: " << index << "\n";
+                positionManager_.closeShort(candle.close);
+                positionManager_.openLong(candle.close);
                 break;
             case Signal::Sell:
-                std::cout << "\n=====\nCandle index: " << index;
-                std::cout << "\nSell\n======\n";
+                std::cout << "\n=====\nCandle index: " << index << "\n";
+                positionManager_.closeLong(candle.close); 
+                positionManager_.openShort(candle.close);
                 break;
             case Signal::Wait:
                 break;
