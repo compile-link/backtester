@@ -3,13 +3,13 @@
 
 Backtester::Backtester(BacktestContext& ctx)
     // : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
-    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy) {}
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy), reporter_(ctx.reporter) {}
 
 void Backtester::run() {
     std::cout << "----------------------\n";
     std::cout << "Backtester started\n" << std::endl;
 
-    showData();
+    // showData();
     
     Signal signal;
     size_t index = 0;
@@ -48,8 +48,7 @@ void Backtester::showData(){
     std::cout << "Start date:            " << candles.front().date << "\n";
     std::cout << "End date:              " << candles.back().date << "\n";
     
-    // const auto candlesCount = 4;
-    const auto candlesCount = 1;
+    const auto candlesCount = 4;
     size_t count = 1;
     for (const auto& c : candles) {
        if(count >= candlesCount) break;

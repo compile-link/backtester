@@ -10,7 +10,7 @@ enum class PositionType {
 struct Position {
     double openPrice;
     double closePrice;
-    double sizeFactor;
+    double sizeFactor; // Implies position size, eg. 1.0 uses full balance to open a position
     PositionType type;
     bool isOpen = false;
     

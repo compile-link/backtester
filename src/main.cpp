@@ -10,7 +10,8 @@ int main() {
         DataManager{},
         PositionManager{},
         // std::move(strategySMA)
-        StrategySMA{}
+        StrategySMA{},
+        Reporter{}
     };
     // Backtester backtester(std::move(ctx));
     Backtester backtester(ctx);

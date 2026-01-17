@@ -16,5 +16,6 @@ add_executable(backtester
  src/PositionManager.cpp
  src/StrategySMA.cpp
  src/Wallet.cpp
+ src/Reporter.cpp
 )
 target_include_directories(backtester PRIVATE include)

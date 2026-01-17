@@ -2,10 +2,11 @@
 
 class Wallet {
     public:
-        explicit Wallet(double balance = kInitialBalance);
+        explicit Wallet(double balance = kDefaultInitialBalance);
         bool updateBalance(double priceChange, double sizeFactor);
 
     private:
-        static constexpr double kInitialBalance = 10000;
-        double balance_ = kInitialBalance;
+        static constexpr double kDefaultInitialBalance = 10000;
+        const double kInitialBalance;
+        double balance_;
 };

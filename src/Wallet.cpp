@@ -1,6 +1,6 @@
 #include "Wallet.hpp"
 
-Wallet::Wallet(double balance): balance_(balance) {}
+Wallet::Wallet(double balance): balance_(balance), kInitialBalance(balance) {}
 
 bool Wallet::updateBalance(double priceChange, double sizeFactor) {
     balance_ += sizeFactor * priceChange * balance_;
