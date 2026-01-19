@@ -1,21 +1,19 @@
 #include "Backtester.hpp"
-// #include "DataManager.hpp"
-// #include "StrategySMA.hpp"
 #include <iostream>
 
 int main() {
-    // auto strategySMA = std::make_unique<StrategySMA>();
-
-    BacktestContext ctx = {
-        DataManager{},
-        PositionManager{},
-        // std::move(strategySMA)
-        StrategySMA{},
-        Reporter{}
+    Reporter reporter;
+    auto onEventCallback = [&reporter](const auto& e){
+        reporter.onEvent(e);
     };
-    // Backtester backtester(std::move(ctx));
+    
+    BacktestContext ctx = {
+        DataManager{onEventCallback},
+        PositionManager{onEventCallback},
+        StrategySMA{onEventCallback}
+    };
     Backtester backtester(ctx);
     backtester.run();
-    std::cout << "Program finished successfully\n"; 
+    reporter.summary();
     return 0;
 }

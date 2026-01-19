@@ -5,17 +5,15 @@
 #include "StrategySMA.hpp"
 #include "PositionManager.hpp"
 #include "Reporter.hpp"
+#include "Events.hpp"
 
 #include <memory>
 
 struct BacktestContext {
     DataManager dataManager;
     PositionManager positionManager;
-    // std::unique_ptr<Strategy> strategy;
     StrategySMA strategy;
-    Reporter reporter;
 };
-
 
 class Backtester {
     public:
@@ -24,9 +22,7 @@ class Backtester {
     private:
         DataManager& dataManager_;
         PositionManager& positionManager_;
-        // std::unique_ptr<Strategy> strategy_;
         Strategy& strategy_;
-        Reporter& reporter_;
         
-        void showData();
+        void showData_();
 };

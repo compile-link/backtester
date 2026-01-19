@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 
-DataManager::DataManager(){
+DataManager::DataManager(std::function<void (const Event&)> callback): notify_(callback) {
     loadData(kFilePath);
 }
 

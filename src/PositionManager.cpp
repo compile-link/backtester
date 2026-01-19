@@ -1,28 +1,28 @@
 #include "PositionManager.hpp"
 #include <iostream>
 
-PositionManager::PositionManager(){
+PositionManager::PositionManager(std::function<void (const Event&)> callback): notify_(callback){
     longPosition_.type = PositionType::Long;
     shortPosition_.type = PositionType::Short;
 };
 
 bool PositionManager::openLong(double price, double sizeFactor){
-    return openPosition(longPosition_, price, sizeFactor);
+    return openPosition_(longPosition_, price, sizeFactor);
 }
 
 bool PositionManager::openShort(double price, double sizeFactor){
-    return openPosition(shortPosition_, price, sizeFactor);
+    return openPosition_(shortPosition_, price, sizeFactor);
 }
 
 bool PositionManager::closeLong(double price){
-    return closePosition(longPosition_, price);
+    return closePosition_(longPosition_, price);
 }
 
 bool PositionManager::closeShort(double price){
-    return closePosition(shortPosition_, price);
+    return closePosition_(shortPosition_, price);
 }
 
-bool PositionManager::openPosition(Position& position, double price, double sizeFactor) {
+bool PositionManager::openPosition_(Position& position, double price, double sizeFactor) {
     if (position.isOpen){ 
         std::cout << "Not opening new position, already open\n";
         return false;
@@ -36,7 +36,7 @@ bool PositionManager::openPosition(Position& position, double price, double size
     return true;
 }
 
-bool PositionManager::closePosition(Position& position, double price){
+bool PositionManager::closePosition_(Position& position, double price){
     if (!position.isOpen){
         std::cout << "Not closing position, already closed\n";
         return false;

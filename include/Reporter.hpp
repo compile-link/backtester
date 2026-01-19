@@ -1,17 +1,20 @@
 #pragma once
 
+#include "Events.hpp"
+
 #include <string>
 
 class Reporter {
     public:
         Reporter(): strategyName_("Strategy") {}
-        void reportResults();
+        void summary();
+        void onEvent(const Event& e);
 
     private:
-        std::string strategyName_;
-        std::string dataFileName_;
-        std::string startDate_; 
-        std::string endDate_; 
+        std::string_view strategyName_;
+        std::string_view dataFileName_;
+        std::string_view startDate_; 
+        std::string_view endDate_; 
         size_t candleCount_; 
         size_t tradeCount_;
         size_t winCount_;

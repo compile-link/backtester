@@ -2,7 +2,9 @@
 #include "StrategySMA.hpp"
 #include <iostream>
 
-StrategySMA::StrategySMA(size_t p): period_(p) {}
+StrategySMA::StrategySMA(std::function<void (const Event&)> callback, size_t p): Strategy(callback), period_(p) {
+    notify_(StrategyEvent {kName}); 
+}
 
 Signal StrategySMA::onCandle(const Candle& candle) {
 

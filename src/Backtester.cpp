@@ -2,14 +2,15 @@
 #include <iostream>
 
 Backtester::Backtester(BacktestContext& ctx)
-    // : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(std::move(ctx.strategy)) {}
-    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy), reporter_(ctx.reporter) {}
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy) {
+        
+    }
 
 void Backtester::run() {
     std::cout << "----------------------\n";
     std::cout << "Backtester started\n" << std::endl;
 
-    // showData();
+    // showData_();
     
     Signal signal;
     size_t index = 0;
@@ -39,7 +40,7 @@ void Backtester::run() {
     std::cout << "----------------------\n";
 }
 
-void Backtester::showData(){
+void Backtester::showData_(){
     std::cout << "-----\n";
     std::cout << "Backtester data\n" << std::endl;
 

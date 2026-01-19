@@ -1,7 +1,7 @@
 #include "Reporter.hpp"
 #include <iostream>
 
-void Reporter::reportResults() {
+void Reporter::summary() {
 
     std::cout << "------ Backtest Results ------\n";
     std::cout << "Strategy: " << strategyName_ << "\n";
@@ -26,4 +26,22 @@ void Reporter::reportResults() {
     std::cout << "End Balance: " << endBalance_ << "\n";
     std::cout << "PnL: " << pnL_ << "\n";
     std::cout << "------------------------------\n";
+}
+
+void Reporter::onEvent(const Event& e) {
+    std::visit([this](auto&& ev) {
+        using T = std::decay_t<decltype(ev)>;
+        if constexpr (std::is_same_v<T, StrategyEvent>) {
+            strategyName_ = ev.strategyName;
+        } else if constexpr (std::is_same_v<T, TradeEvent>) {
+            tradeCount_ = ev.tradeCount;
+            winCount_ = ev.winCount;
+            lossCount_ = ev.lossCount;
+            riskPerTrade_ = ev.riskPerTrade;
+        } else if constexpr (std::is_same_v<T, WalletEvent>) {
+            initialBalance_ = ev.initialBalance;
+            endBalance_ = ev.endBalance;
+            pnL_ = ev.pnL;         
+        }
+    }, e);    
 }

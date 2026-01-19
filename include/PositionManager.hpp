@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Wallet.hpp"
+#include "Events.hpp"
+
+#include <functional>
 
 enum class PositionType {
     Long,
@@ -30,7 +33,7 @@ struct Position {
 
 class PositionManager{
     public:
-        explicit PositionManager();
+        explicit PositionManager(std::function<void (const Event&)> callback);
         
         bool openLong(double price, double sizeFactor=1.0);
         bool openShort(double price, double sizeFactor=1.0);
@@ -42,7 +45,8 @@ class PositionManager{
         Position shortPosition_; 
         Wallet wallet_;
 
-        bool openPosition(Position& position, double price, double sizeFactor);
-        bool closePosition(Position& position, double price);
-
+        bool openPosition_(Position& position, double price, double sizeFactor);
+        bool closePosition_(Position& position, double price);
+        
+        std::function<void (const Event&)> notify_; 
 };
