@@ -7,7 +7,7 @@ StrategySMA::StrategySMA(size_t p) noexcept: Strategy("Simple Moving Average (SM
 Signal StrategySMA::onCandle(const Candle& candle) {
 
     Signal signal = Signal::Wait;
-    updateSMA(candle);
+    updateSMA_(candle);
 
     if(sma_ < 0.0) return signal;
 
@@ -22,7 +22,7 @@ Signal StrategySMA::onCandle(const Candle& candle) {
     return signal;
 }
 
-void StrategySMA::updateSMA(const Candle& candle){
+void StrategySMA::updateSMA_(const Candle& candle){
     smaPoints_.push_back(candle.close);
     if(smaPoints_.size() < period_)
         return;

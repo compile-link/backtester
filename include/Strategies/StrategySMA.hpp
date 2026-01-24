@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Strategies/Strategy.hpp"
+#include "Strategy.hpp"
 #include <vector>
 
 enum class CandleCloseSide {
@@ -22,5 +22,5 @@ class StrategySMA: public Strategy {
         double sma_ = 0;
         CandleCloseSide prevCloseSide_ = CandleCloseSide::Uninitialized; 
         
-        void updateSMA(const Candle& candle);
+        void updateSMA_(const Candle& candle);
     };
