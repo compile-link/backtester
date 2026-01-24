@@ -1,19 +1,26 @@
 #pragma once
 
 #include "Candle.hpp"
-#include "Events.hpp"
 
 #include <vector>
 #include <functional>
+#include <string_view>
+
+struct DataManagerSnapshot {
+    std::string_view fileName;
+    std::string_view startDate; 
+    std::string_view endDate; 
+    size_t candleCount;
+};
 
 class DataManager {
     public:
-        explicit DataManager(std::function<void (const Event&)> callback);
+        DataManager();
         bool loadData(const std::string& path);
-        const std::vector<Candle>& getCandles() const { return candles_; }
+        const std::vector<Candle>& getCandles() const noexcept { return candles_; }
+        DataManagerSnapshot getSnapshot() const noexcept;
         
     private:
         static constexpr const char* kFilePath = "../data/eurusd_d.csv"; 
         std::vector<Candle> candles_; // data read from file, stored in memory
-        std::function<void (const Event&)> notify_;
 };

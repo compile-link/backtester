@@ -2,30 +2,25 @@
 #include <iostream>
 
 Backtester::Backtester(BacktestContext& ctx)
-    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy) {
-        
-    }
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy), reporter_(ctx.reporter) {}
 
 void Backtester::run() {
-    std::cout << "----------------------\n";
-    std::cout << "Backtester started\n" << std::endl;
-
-    // showData_();
+    std::cout << "------------------------------\n";
+    std::cout << "Backtesting... ";
     
     Signal signal;
     size_t index = 0;
     for(const auto& candle : dataManager_.getCandles()){
-        // signal = strategy_->onCandle(candle);
         signal = strategy_.onCandle(candle);
         
         switch(signal) { 
             case Signal::Buy:
-                std::cout << "\n=====\nCandle index: " << index << "\n";
+                // std::cout << "\n=====\nCandle index: " << index << "\n";
                 positionManager_.closeShort(candle.close);
                 positionManager_.openLong(candle.close);
                 break;
             case Signal::Sell:
-                std::cout << "\n=====\nCandle index: " << index << "\n";
+                // std::cout << "\n=====\nCandle index: " << index << "\n";
                 positionManager_.closeLong(candle.close); 
                 positionManager_.openShort(candle.close);
                 break;
@@ -35,31 +30,14 @@ void Backtester::run() {
 
         ++index;
     }
-    
-    std::cout << "Final index: " << index << "\n";
-    std::cout << "----------------------\n";
-}
 
-void Backtester::showData_(){
-    std::cout << "-----\n";
-    std::cout << "Backtester data\n" << std::endl;
+    reporter_.collectData(
+        dataManager_.getSnapshot(),
+        strategy_.getSnapshot(),
+        positionManager_.getSnapshot(),
+        positionManager_.getWalletSnapshot()
+    );
 
-    const auto& candles = dataManager_.getCandles();   
-    std::cout << "Number of data points: " << candles.size() << "\n";
-    std::cout << "Start date:            " << candles.front().date << "\n";
-    std::cout << "End date:              " << candles.back().date << "\n";
     
-    const auto candlesCount = 4;
-    size_t count = 1;
-    for (const auto& c : candles) {
-       if(count >= candlesCount) break;
-
-       std::cout << count++ << " " 
-       << c.open << " " 
-       << c.high << " " 
-       << c.low << " " 
-       << c.close << "\n"; 
-    }
-    
-    std::cout << "-----\n";
+    std::cout << "Done!\n";
 }

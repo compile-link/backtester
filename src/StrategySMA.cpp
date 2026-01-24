@@ -2,9 +2,7 @@
 #include "StrategySMA.hpp"
 #include <iostream>
 
-StrategySMA::StrategySMA(std::function<void (const Event&)> callback, size_t p): Strategy(callback), period_(p) {
-    notify_(StrategyEvent {kName}); 
-}
+StrategySMA::StrategySMA(size_t p) noexcept: Strategy("Simple Moving Average (SMA)"), period_(p) {}
 
 Signal StrategySMA::onCandle(const Candle& candle) {
 

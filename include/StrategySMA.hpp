@@ -12,12 +12,10 @@ enum class CandleCloseSide {
 
 class StrategySMA: public Strategy {
     public:
-        explicit StrategySMA(std::function<void (const Event&)> callback, size_t p = kDefaultPeriod);
-
+        explicit StrategySMA(size_t p = kDefaultPeriod) noexcept;
         Signal onCandle(const Candle& candle) override; 
 
     private:
-        static constexpr std::string_view kName = "Simple Moving Average (SMA)";
         static constexpr size_t kDefaultPeriod = 14;
         size_t period_ = 0;
         std::vector<double> smaPoints_; 

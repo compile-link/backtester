@@ -1,9 +1,14 @@
 #include "Reporter.hpp"
+
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 
 void Reporter::summary() {
 
+    std::cout << "------------------------------\n";
     std::cout << "------ Backtest Results ------\n";
+    std::cout << "------------------------------\n";
     std::cout << "Strategy: " << strategyName_ << "\n";
     std::cout << "Data File: " << dataFileName_ << "\n";
     std::cout << "Date Range: " << startDate_ << " - " << endDate_ << "\n";
@@ -11,37 +16,46 @@ void Reporter::summary() {
     std::cout << "Trade Count (W/L): " << tradeCount_ << " (" << winCount_ << "/" << lossCount_ << ")\n";
 
     if (tradeCount_ > 0){
-        double winRate = winCount_ / tradeCount_ * 100.0;
+        size_t winRate = static_cast<size_t>(std::round(static_cast<double>(winCount_) * 100.0 / tradeCount_));
         std::cout << "Win Rate: " << winRate << "%\n";
     }
     
     std::string riskPerTrade = "Unlimited";
-    if (riskPerTrade_ > 0.0)
-        riskPerTrade = std::to_string(riskPerTrade_ * 100.0) + "%";
+    if (riskPerTrade_)
+        riskPerTrade = std::to_string(*riskPerTrade_ * 100.0) + "%";
     else    
         riskPerTrade = "Unlimited";
 
     std::cout << "Risk per Trade: " << riskPerTrade << "\n";
-    std::cout << "Initial Balance: " << initialBalance_ << "\n";
-    std::cout << "End Balance: " << endBalance_ << "\n";
-    std::cout << "PnL: " << pnL_ << "\n";
+    std::cout << "Initial Balance: " << std::fixed << std::setprecision(2) << initialBalance_ << "\n";
+    std::cout << "End Balance: " << std::fixed << std::setprecision(2) << endBalance_ << "\n";
+    std::cout << "PnL: " << std::fixed << std::setprecision(2) << pnL_ << "\n";
     std::cout << "------------------------------\n";
 }
 
-void Reporter::onEvent(const Event& e) {
-    std::visit([this](auto&& ev) {
-        using T = std::decay_t<decltype(ev)>;
-        if constexpr (std::is_same_v<T, StrategyEvent>) {
-            strategyName_ = ev.strategyName;
-        } else if constexpr (std::is_same_v<T, TradeEvent>) {
-            tradeCount_ = ev.tradeCount;
-            winCount_ = ev.winCount;
-            lossCount_ = ev.lossCount;
-            riskPerTrade_ = ev.riskPerTrade;
-        } else if constexpr (std::is_same_v<T, WalletEvent>) {
-            initialBalance_ = ev.initialBalance;
-            endBalance_ = ev.endBalance;
-            pnL_ = ev.pnL;         
-        }
-    }, e);    
+void Reporter::collectData(
+    DataManagerSnapshot dataManagerSnapshot,
+    StrategySnapshot strategySnapshot, 
+    PositionManagerSnapshot positionManagerSnapshot, 
+    WalletSnapshot walletSnapshot
+) noexcept {
+    // DataManager Data
+    dataFileName_ = dataManagerSnapshot.fileName;
+    startDate_ = dataManagerSnapshot.startDate; 
+    endDate_ = dataManagerSnapshot.endDate; 
+    candleCount_ = dataManagerSnapshot.candleCount; 
+
+    // Strategy Data
+    strategyName_ = strategySnapshot.strategyName;
+    riskPerTrade_ = strategySnapshot.riskPerTrade;
+    
+    // PositionManager Data
+    tradeCount_ = positionManagerSnapshot.tradeCount;
+    winCount_ = positionManagerSnapshot.winCount;
+    lossCount_ = positionManagerSnapshot.lossCount;
+
+    // Wallet Data
+    initialBalance_ = walletSnapshot.initialBalance;
+    endBalance_ = walletSnapshot.endBalance;
+    pnL_ = walletSnapshot.pnL;         
 }

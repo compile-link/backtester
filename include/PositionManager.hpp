@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Wallet.hpp"
-#include "Events.hpp"
 
 #include <functional>
 
@@ -31,22 +30,34 @@ struct Position {
 
 };
 
+struct PositionManagerSnapshot {
+    size_t tradeCount;
+    size_t winCount;
+    size_t lossCount;
+};
+
 class PositionManager{
     public:
-        explicit PositionManager(std::function<void (const Event&)> callback);
+        PositionManager();
         
         bool openLong(double price, double sizeFactor=1.0);
         bool openShort(double price, double sizeFactor=1.0);
         bool closeLong(double price);
         bool closeShort(double price);
+        
+        PositionManagerSnapshot getSnapshot() const noexcept;
+        WalletSnapshot getWalletSnapshot() const noexcept; 
 
     private:
         Position longPosition_; 
         Position shortPosition_; 
         Wallet wallet_;
+        
+        size_t tradeCount_ = 0;
+        size_t winCount_ = 0;
+        size_t lossCount_ = 0;
 
         bool openPosition_(Position& position, double price, double sizeFactor);
         bool closePosition_(Position& position, double price);
         
-        std::function<void (const Event&)> notify_; 
 };

@@ -5,7 +5,6 @@
 #include "StrategySMA.hpp"
 #include "PositionManager.hpp"
 #include "Reporter.hpp"
-#include "Events.hpp"
 
 #include <memory>
 
@@ -13,6 +12,7 @@ struct BacktestContext {
     DataManager dataManager;
     PositionManager positionManager;
     StrategySMA strategy;
+    Reporter& reporter;
 };
 
 class Backtester {
@@ -23,6 +23,7 @@ class Backtester {
         DataManager& dataManager_;
         PositionManager& positionManager_;
         Strategy& strategy_;
+        Reporter& reporter_;
         
         void showData_();
 };

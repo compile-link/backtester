@@ -3,14 +3,11 @@
 
 int main() {
     Reporter reporter;
-    auto onEventCallback = [&reporter](const auto& e){
-        reporter.onEvent(e);
-    };
-    
     BacktestContext ctx = {
-        DataManager{onEventCallback},
-        PositionManager{onEventCallback},
-        StrategySMA{onEventCallback}
+        DataManager{},
+        PositionManager{},
+        StrategySMA{},
+        reporter
     };
     Backtester backtester(ctx);
     backtester.run();

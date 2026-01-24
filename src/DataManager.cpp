@@ -3,14 +3,14 @@
 #include <fstream>
 #include <sstream>
 
-DataManager::DataManager(std::function<void (const Event&)> callback): notify_(callback) {
+DataManager::DataManager() {
     loadData(kFilePath);
 }
 
 bool DataManager::loadData(const std::string& path){
 
-    std::cout << "----------------------\n";
-    std::cout << "Reading csv file " << path << "\n";
+    std::cout << "------------------------------\n";
+    std::cout << "Reading csv file " << path << "... ";
     
     std::ifstream file(path);
     if(!file.is_open()) {
@@ -47,7 +47,15 @@ bool DataManager::loadData(const std::string& path){
     file.close();
     
     std::cout << "Done!\n";
-    std::cout << "----------------------\n";
 
     return !candles_.empty();
+}
+
+DataManagerSnapshot DataManager::getSnapshot() const noexcept {
+    return {
+        kFilePath,
+        candles_.front().date, 
+        candles_.back().date,
+        candles_.size()
+    };
 }
