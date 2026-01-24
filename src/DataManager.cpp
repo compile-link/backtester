@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 
 DataManager::DataManager() {
     loadData(kFilePath);
@@ -53,9 +54,15 @@ bool DataManager::loadData(const std::string& path){
 
 DataManagerSnapshot DataManager::getSnapshot() const noexcept {
     return {
-        kFilePath,
+        getFileName(),
         candles_.front().date, 
         candles_.back().date,
         candles_.size()
     };
 }
+
+std::string DataManager::getFileName() const noexcept {
+std::filesystem::path p(kFilePath);
+std::string s = p.stem().string();
+    return std::filesystem::path(kFilePath).stem().string();
+};

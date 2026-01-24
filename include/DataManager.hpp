@@ -7,7 +7,7 @@
 #include <string_view>
 
 struct DataManagerSnapshot {
-    std::string_view fileName;
+    std::string fileName;
     std::string_view startDate; 
     std::string_view endDate; 
     size_t candleCount;
@@ -23,4 +23,6 @@ class DataManager {
     private:
         static constexpr const char* kFilePath = "../data/eurusd_d.csv"; 
         std::vector<Candle> candles_; // data read from file, stored in memory
+
+        std::string getFileName() const noexcept;
 };
