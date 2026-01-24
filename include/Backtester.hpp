@@ -1,8 +1,8 @@
 #pragma once
 
 #include "DataManager.hpp"
-#include "Strategy.hpp"
-#include "StrategySMA.hpp"
+#include "Strategies/Strategy.hpp"
+#include "Strategies/StrategySMA.hpp"
 #include "PositionManager.hpp"
 #include "Reporter.hpp"
 

@@ -1,5 +1,5 @@
 
-#include "StrategySMA.hpp"
+#include "Strategies/StrategySMA.hpp"
 #include <iostream>
 
 StrategySMA::StrategySMA(size_t p) noexcept: Strategy("Simple Moving Average (SMA)"), period_(p) {}

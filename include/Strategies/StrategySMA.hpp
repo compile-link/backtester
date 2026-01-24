@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Strategy.hpp"
+#include "Strategies/Strategy.hpp"
 #include <vector>
 
 enum class CandleCloseSide {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DataManager.hpp"
-#include "Strategy.hpp"
+#include "Strategies/Strategy.hpp"
 #include "PositionManager.hpp"
 
 #include <string>
