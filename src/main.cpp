@@ -1,4 +1,6 @@
 #include "Backtester.hpp"
+#include "Menu.hpp"
+
 #include <iostream>
 
 int main() {
@@ -10,7 +12,14 @@ int main() {
         reporter
     };
     Backtester backtester(ctx);
-    backtester.run();
-    reporter.summary();
+    Menu menu(backtester);
+    
+    bool startBacktest = false;
+    menu.show(startBacktest);
+    if(startBacktest){ 
+        backtester.run();
+        reporter.summary();
+    }
+
     return 0;
 }
