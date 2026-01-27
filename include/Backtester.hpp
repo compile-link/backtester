@@ -11,7 +11,6 @@
 struct BacktestContext {
     DataManager dataManager;
     PositionManager positionManager;
-    StrategySMA strategy;
     Reporter& reporter;
 };
 
@@ -19,11 +18,13 @@ class Backtester {
     public:
         explicit Backtester(BacktestContext& ctx);
         void run();         
+        void setStrategy(std::unique_ptr<Strategy> strategy) { strategy_ = std::move(strategy); }
+
     private:
         DataManager& dataManager_;
         PositionManager& positionManager_;
-        Strategy& strategy_;
         Reporter& reporter_;
+        std::unique_ptr<Strategy> strategy_;
         
         void showData_();
 };

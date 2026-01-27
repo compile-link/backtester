@@ -10,14 +10,21 @@ enum class MenuState {
     Exit
 };
 
+struct Config {
+    std::string_view strategyName;
+    std::string_view dataFileName;
+};
+
 class Menu {
     public:
-        explicit Menu(Backtester& backtester) noexcept: backtester_(backtester) {}
+        Menu(Backtester& backtester, const std::vector<std::string_view>& strategyNames) noexcept;
         void show(bool& startBacktest);
+        const Config& config() const noexcept { return config_; };
         
     private:
         Backtester& backtester_;
-        int strategyIndex_ = 1;
+        const std::vector<std::string_view>& strategyNames_;
+        Config config_;
         int dataFileIndex_ = 1;
 
         void startBacktest_();

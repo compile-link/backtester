@@ -2,16 +2,15 @@
 #include <iostream>
 
 Backtester::Backtester(BacktestContext& ctx)
-    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), strategy_(ctx.strategy), reporter_(ctx.reporter) {}
+    : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), reporter_(ctx.reporter) {}
 
 void Backtester::run() {
     std::cout << "------------------------------\n";
-    std::cout << "Backtesting... ";
-    
+
     Signal signal;
     size_t index = 0;
     for(const auto& candle : dataManager_.getCandles()){
-        signal = strategy_.onCandle(candle);
+        signal = strategy_->onCandle(candle);
         
         switch(signal) { 
             case Signal::Buy:
@@ -33,11 +32,9 @@ void Backtester::run() {
 
     reporter_.collectData(
         dataManager_.getSnapshot(),
-        strategy_.getSnapshot(),
+        strategy_->getSnapshot(),
         positionManager_.getSnapshot(),
         positionManager_.getWalletSnapshot()
     );
 
-    
-    std::cout << "Done!\n";
 }

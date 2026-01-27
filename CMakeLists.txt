@@ -15,6 +15,8 @@ add_executable(backtester
  src/DataManager.cpp
  src/PositionManager.cpp
  src/Strategies/StrategySMA.cpp
+ src/Strategies/StrategyEngulfing.cpp
+ src/Strategies/StrategyRegistry.cpp
  src/Wallet.cpp
  src/Reporter.cpp
  src/Menu.cpp

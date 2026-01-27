@@ -2,7 +2,7 @@
 #include "Strategies/StrategySMA.hpp"
 #include <iostream>
 
-StrategySMA::StrategySMA(size_t p) noexcept: Strategy("Simple Moving Average (SMA)"), period_(p) {}
+StrategySMA::StrategySMA(size_t p) noexcept: period_(p) {}
 
 Signal StrategySMA::onCandle(const Candle& candle) {
 

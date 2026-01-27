@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+Menu::Menu(Backtester& backtester, const std::vector<std::string_view>& strategyNames) noexcept:
+    backtester_(backtester), 
+    strategyNames_(strategyNames), 
+    config_{ strategyNames.empty() ? "" : strategyNames.front() } {}
+
 void Menu::show(bool& startBacktest) {
     MenuState state = MenuState::Main;
 
@@ -71,7 +76,7 @@ MenuState Menu::showSettings_() {
     MenuState state = MenuState::Settings;
     int option;
 
-    std::cout << "1) Strategy\n";
+    std::cout << "1) Strategy   [" << config_.strategyName << "]\n";
     std::cout << "2) Data file\n";
     std::cout << "0) Back\n";
 
@@ -100,8 +105,9 @@ MenuState Menu::showSettings_() {
 MenuState Menu::showStrategySettings_() {
     int option;
 
-    std::cout << "1) SMA\n";
-    std::cout << "2) Engulfing\n";
+    for(std::size_t i=0; i< strategyNames_.size(); i++){
+        std::cout << i+1 << ") " << strategyNames_[i] << "\n";
+    }
     std::cout << "0) Back\n";
     
     while(true) {
@@ -111,8 +117,8 @@ MenuState Menu::showStrategySettings_() {
             return MenuState::Settings;
         }
 
-        if(option >= 1 && option <= 2) {
-            strategyIndex_ = option;
+        if(option >= 1 && option <= strategyNames_.size()) {
+            config_.strategyName = strategyNames_[option-1];
         }
         else std::cout << "Invalid option, try again.\n";
     } 
