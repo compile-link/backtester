@@ -4,24 +4,34 @@
 
 #include <iostream>
 
-int main() {
-    Reporter reporter;
-    BacktestContext ctx = {
-        DataManager{},
-        PositionManager{},
-        reporter
-    };
-    Backtester backtester(ctx);
-    Menu menu(backtester, StrategyRegistry::StrategyNames());
-    
-    bool startBacktest = false;
-    menu.show(startBacktest);
-    if(startBacktest){ 
-        std::unique_ptr<Strategy> strategy = StrategyRegistry::CreateStrategy(menu.config().strategyName);
-        backtester.setStrategy(std::move(strategy));
-        backtester.run();
-        reporter.summary();
-    }
+int main(int argc, char* argv[]) {
+    try {
+        std::string_view dataDir = (argc > 1) ? argv[1] : "";
+        DataManager dataManager(dataDir);
+        Reporter reporter;
 
-    return 0;
+        BacktestContext ctx = {
+            dataManager,
+            PositionManager{},
+            reporter
+        };
+        Backtester backtester(ctx);
+        Menu menu(StrategyRegistry::StrategyNames(), dataManager.dataFileNames());
+
+        bool startBacktest = false;
+        menu.show(startBacktest);
+        if(startBacktest){ 
+            std::unique_ptr<Strategy> strategy = StrategyRegistry::CreateStrategy(menu.config().strategyName);
+            backtester.setStrategy(std::move(strategy));
+            dataManager.loadData(menu.config().dataFileName);
+            backtester.run();
+            reporter.summary();
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1;
+    } catch (...) {
+        std::cerr << "Error occurred \n";
+        return 1;
+    }
 }

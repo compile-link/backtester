@@ -4,19 +4,49 @@
 #include <sstream>
 #include <filesystem>
 
-DataManager::DataManager() {
-    loadData(kFilePath);
+DataManager::DataManager(std::string_view dataDir): dataDir_(dataDir) {
+   if (!std::filesystem::exists(dataDir_)) {
+       if (std::filesystem::exists("./data")) {
+            dataDir_ = "./data";
+        } else if (std::filesystem::exists("../data")) {
+            dataDir_ = "../data";
+        }
+    }
+
+    scanDataDirectory();
 }
 
-bool DataManager::loadData(const std::string& path){
+void DataManager::scanDataDirectory() {
+    if (!std::filesystem::exists(dataDir_)) {
+        throw std::runtime_error("Data folder not found!");
+    }
 
-    std::cout << "------------------------------\n";
-    std::cout << "Reading csv file " << path << "... ";
+    std::vector<std::filesystem::path> files;
+    
+    dataFilesMap_.clear();
+    for (const auto& entry: std::filesystem::directory_iterator(dataDir_)) {
+        if(entry.is_regular_file()) {
+            auto fileName = entry.path().stem().string();
+            dataFilesMap_.emplace(fileName, entry.path());
+        }
+    }
+}
+
+bool DataManager::loadData(const std::string fileName) {
+
+    auto dataFile = dataFilesMap_.find(fileName);
+    if (dataFile == dataFilesMap_.end()) {
+        throw std::out_of_range("Data file not initialized: " + fileName);
+    }
+    auto path = dataFile->second.string();
+    dataFileName_ = dataFile->second.filename().string();
+    
+    // std::cout << "------------------------------\n";
+    // std::cout << "Reading file " << dataFileName_ << "...   ";
     
     std::ifstream file(path);
     if(!file.is_open()) {
-        std::cerr << "Error: can't open file " << path << "\n";
-        return false;
+        throw std::runtime_error("Can't open file");
     }
 
     std::string line;
@@ -52,17 +82,21 @@ bool DataManager::loadData(const std::string& path){
     return !candles_.empty();
 }
 
+std::vector<std::string> DataManager::dataFileNames() const {
+    std::vector<std::string> dataFileNames;   
+    dataFileNames.reserve(dataFilesMap_.size());
+    for (const auto& [dataFileName, _]: dataFilesMap_) {
+        dataFileNames.push_back(dataFileName);
+    }
+    
+    return dataFileNames;
+}
+
 DataManagerSnapshot DataManager::getSnapshot() const noexcept {
     return {
-        getFileName(),
+        dataFileName_,
         candles_.front().date, 
         candles_.back().date,
         candles_.size()
     };
 }
-
-std::string DataManager::getFileName() const noexcept {
-std::filesystem::path p(kFilePath);
-std::string s = p.stem().string();
-    return std::filesystem::path(kFilePath).stem().string();
-};

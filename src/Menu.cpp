@@ -2,45 +2,41 @@
 
 #include <iostream>
 
-Menu::Menu(Backtester& backtester, const std::vector<std::string_view>& strategyNames) noexcept:
-    backtester_(backtester), 
+Menu::Menu(const std::vector<std::string_view>& strategyNames, const std::vector<std::string>& dataFileNames) noexcept:
     strategyNames_(strategyNames), 
-    config_{ strategyNames.empty() ? "" : strategyNames.front() } {}
+    dataFileNames_(std::move(dataFileNames)),
+    config_{ 
+        strategyNames_.empty() ? "" : strategyNames_.front(),
+        dataFileNames_.empty() ? "" : dataFileNames_.front()
+    } {}
 
 void Menu::show(bool& startBacktest) {
     MenuState state = MenuState::Main;
 
     while(state != MenuState::Exit) {
-        clear_();
-        printHeader_();
+        clear();
+        printHeader();
 
         switch (state) {
             case MenuState::Main:
-                state = showMainMenu_(startBacktest);
+                state = showMainMenu(startBacktest);
                 break;
             case MenuState::Settings:
-                state = showSettings_();
+                state = showSettings();
                 break;
             case MenuState::StrategySettings:
-                state = showStrategySettings_();
+                state = showStrategySettings();
                 break;
             case MenuState::DataFileSettings:
-                state = showDataFileSettings_();
+                state = showDataFileSettings();
                 break;
             default:
                 state = MenuState::Exit;
         }
     }
-    
-    if(startBacktest) {
-        clear_();
-        startBacktest_(); 
-    }
 }
 
-void Menu::startBacktest_() {}
-
-MenuState Menu::showMainMenu_(bool& startBacktest) {
+MenuState Menu::showMainMenu(bool& startBacktest) {
     MenuState state = MenuState::Main;
     int option;
 
@@ -55,6 +51,7 @@ MenuState Menu::showMainMenu_(bool& startBacktest) {
         switch (option) {
             case 1:
                 startBacktest = true;
+                clear();
                 state = MenuState::Exit;
                 break;
             case 2:
@@ -72,12 +69,12 @@ MenuState Menu::showMainMenu_(bool& startBacktest) {
     return state;
 }
 
-MenuState Menu::showSettings_() {
+MenuState Menu::showSettings() {
     MenuState state = MenuState::Settings;
     int option;
 
     std::cout << "1) Strategy   [" << config_.strategyName << "]\n";
-    std::cout << "2) Data file\n";
+    std::cout << "2) Data file  [" << config_.dataFileName << "]\n";
     std::cout << "0) Back\n";
 
     while (state == MenuState::Settings) {
@@ -102,7 +99,7 @@ MenuState Menu::showSettings_() {
     return state;
 }
 
-MenuState Menu::showStrategySettings_() {
+MenuState Menu::showStrategySettings() {
     int option;
 
     for(std::size_t i=0; i< strategyNames_.size(); i++){
@@ -124,12 +121,12 @@ MenuState Menu::showStrategySettings_() {
     } 
 }
 
-MenuState Menu::showDataFileSettings_() {
+MenuState Menu::showDataFileSettings() {
     int option;
 
-    std::cout << "1) eurusd\n";
-    std::cout << "2) gold\n";
-    std::cout << "3) nq\n";
+    for(std::size_t i=0; i< dataFileNames_.size(); i++){
+        std::cout << i+1 << ") " << dataFileNames_[i] << "\n";
+    }
     std::cout << "0) Back\n";
 
     while(true) {
@@ -139,19 +136,19 @@ MenuState Menu::showDataFileSettings_() {
             return MenuState::Settings;
         }
 
-        if(option >= 1 && option <= 3) {
-            dataFileIndex_ = option;
+        if(option >= 1 && option <= dataFileNames_.size()) {
+            config_.dataFileName = dataFileNames_[option-1];
         }
         else std::cout << "Invalid option, try again.\n";
     } 
 } 
 
 // Requires terminal to support ANSI escape codes
-void Menu::clear_() const noexcept {
+void Menu::clear() const noexcept {
     std::cout << "\033[2J\033[H";
 }
 
-void Menu::printHeader_() const noexcept {
+void Menu::printHeader() const noexcept {
     std::cout << "\n";
     std::cout << "------------------------------\n";
     std::cout << "--------  Backtester  --------\n";

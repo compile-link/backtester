@@ -57,7 +57,7 @@ class PositionManager{
         size_t winCount_ = 0;
         size_t lossCount_ = 0;
 
-        bool openPosition_(Position& position, double price, double sizeFactor);
-        bool closePosition_(Position& position, double price);
+        bool openPosition(Position& position, double price, double sizeFactor);
+        bool closePosition(Position& position, double price);
         
 };

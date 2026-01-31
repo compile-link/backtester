@@ -5,8 +5,6 @@ Backtester::Backtester(BacktestContext& ctx)
     : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), reporter_(ctx.reporter) {}
 
 void Backtester::run() {
-    std::cout << "------------------------------\n";
-
     Signal signal;
     size_t index = 0;
     for(const auto& candle : dataManager_.getCandles()){

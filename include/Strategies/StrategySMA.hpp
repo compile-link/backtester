@@ -28,5 +28,5 @@ class StrategySMA: public Strategy {
         double sma_ = 0;
         CandleCloseSide prevCloseSide_ = CandleCloseSide::Uninitialized; 
         
-        void updateSMA_(const Candle& candle);
+        void updateSMA(const Candle& candle);
     };

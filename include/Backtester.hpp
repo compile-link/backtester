@@ -9,7 +9,7 @@
 #include <memory>
 
 struct BacktestContext {
-    DataManager dataManager;
+    DataManager& dataManager;
     PositionManager positionManager;
     Reporter& reporter;
 };
@@ -25,6 +25,4 @@ class Backtester {
         PositionManager& positionManager_;
         Reporter& reporter_;
         std::unique_ptr<Strategy> strategy_;
-        
-        void showData_();
 };
