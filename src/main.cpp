@@ -16,12 +16,12 @@ int main(int argc, char* argv[]) {
             reporter
         };
         Backtester backtester(ctx);
-        Menu menu(StrategyRegistry::StrategyNames(), dataManager.dataFileNames());
+        Menu menu(StrategyRegistry::strategyInfos(), dataManager.dataFileNames());
 
         bool startBacktest = false;
         menu.show(startBacktest);
         if(startBacktest){ 
-            std::unique_ptr<Strategy> strategy = StrategyRegistry::CreateStrategy(menu.config().strategyName);
+            std::unique_ptr<Strategy> strategy = StrategyRegistry::createStrategy(menu.config().strategyInfo.name);
             backtester.setStrategy(std::move(strategy));
             dataManager.loadData(menu.config().dataFileName);
             backtester.run();

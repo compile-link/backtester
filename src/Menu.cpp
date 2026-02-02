@@ -2,11 +2,14 @@
 
 #include <iostream>
 
-Menu::Menu(const std::vector<std::string_view>& strategyNames, const std::vector<std::string>& dataFileNames) noexcept:
-    strategyNames_(strategyNames), 
+Menu::Menu(const std::vector<StrategyInfo>& strategyInfos, const std::vector<std::string>& dataFileNames) noexcept:
+    strategyInfos_(strategyInfos), 
     dataFileNames_(std::move(dataFileNames)),
     config_{ 
-        strategyNames_.empty() ? "" : strategyNames_.front(),
+        {
+            strategyInfos_.empty() ? "" : strategyInfos_.front().name,
+            strategyInfos_.empty() ? std::function<void()>{} : strategyInfos_.front().description
+        },
         dataFileNames_.empty() ? "" : dataFileNames_.front()
     } {}
 
@@ -42,7 +45,7 @@ MenuState Menu::showMainMenu(bool& startBacktest) {
 
     std::cout << "1) Start Backtest\n";
     std::cout << "2) Settings\n";
-    std::cout << "3) Exit\n";
+    std::cout << "3) Exit\n\n";
     
     while (state == MenuState::Main) {
         std::cout << "Choose option: ";
@@ -73,9 +76,9 @@ MenuState Menu::showSettings() {
     MenuState state = MenuState::Settings;
     int option;
 
-    std::cout << "1) Strategy   [" << config_.strategyName << "]\n";
+    std::cout << "1) Strategy   [" << config_.strategyInfo.name << "]\n";
     std::cout << "2) Data file  [" << config_.dataFileName << "]\n";
-    std::cout << "0) Back\n";
+    std::cout << "0) Back\n\n";
 
     while (state == MenuState::Settings) {
         std::cout << "Choose option: ";
@@ -102,35 +105,43 @@ MenuState Menu::showSettings() {
 MenuState Menu::showStrategySettings() {
     int option;
 
-    for(std::size_t i=0; i< strategyNames_.size(); i++){
-        std::cout << i+1 << ") " << strategyNames_[i] << "\n";
-    }
-    std::cout << "0) Back\n";
-    
+    printStrategySettingsOptions();
+
     while(true) {
-        std::cout << "Choose option: ";
         std::cin >> option;
+        
         if(option == 0) {
             return MenuState::Settings;
         }
 
-        if(option >= 1 && option <= strategyNames_.size()) {
-            config_.strategyName = strategyNames_[option-1];
+        if(option >= 1 && option <= strategyInfos_.size()) {
+            config_.strategyInfo = strategyInfos_[option-1];
+            clear();
+            printHeader();
+            printStrategySettingsOptions();
         }
         else std::cout << "Invalid option, try again.\n";
     } 
 }
 
+void Menu::printStrategySettingsOptions() const {
+    for(std::size_t i=0; i < strategyInfos_.size(); i++){
+        std::cout << i+1 << ") " << strategyInfos_[i].name << "\n";
+    }
+    std::cout << "0) Back\n\n";
+    
+    std::cout << "Selected: " << config_.strategyInfo.name << "\n\n"; 
+    config_.strategyInfo.description();
+
+    std::cout << "\nChoose option: ";
+}
+
 MenuState Menu::showDataFileSettings() {
     int option;
 
-    for(std::size_t i=0; i< dataFileNames_.size(); i++){
-        std::cout << i+1 << ") " << dataFileNames_[i] << "\n";
-    }
-    std::cout << "0) Back\n";
+    printDataFileSettingsOptions();
 
     while(true) {
-        std::cout << "Choose option: ";
         std::cin >> option;
         if(option == 0) {
             return MenuState::Settings;
@@ -138,10 +149,23 @@ MenuState Menu::showDataFileSettings() {
 
         if(option >= 1 && option <= dataFileNames_.size()) {
             config_.dataFileName = dataFileNames_[option-1];
+            clear();
+            printHeader();
+            printDataFileSettingsOptions();
         }
         else std::cout << "Invalid option, try again.\n";
     } 
 } 
+
+void Menu::printDataFileSettingsOptions() const {
+    for(std::size_t i=0; i< dataFileNames_.size(); i++){
+        std::cout << i+1 << ") " << dataFileNames_[i] << "\n";
+    }
+    std::cout << "0) Back\n\n";
+
+    std::cout << "Selected: " << config_.dataFileName << "\n";
+    std::cout << "\nChoose option: ";
+}
 
 // Requires terminal to support ANSI escape codes
 void Menu::clear() const noexcept {

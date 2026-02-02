@@ -1,4 +1,3 @@
-
 #include "Strategies/StrategySMA.hpp"
 #include <iostream>
 
@@ -36,3 +35,9 @@ void StrategySMA::updateSMA(const Candle& candle){
     
     sma_ = sum / period_;
 }
+
+void StrategySMA::staticDescription() noexcept {
+    std::cout << "Based on a " << kDefaultPeriod << "-period simple moving average.\n\
+Buy signal: price closes above the SMA.\n\
+Sell signal: price closes below the SMA.\n";
+} 

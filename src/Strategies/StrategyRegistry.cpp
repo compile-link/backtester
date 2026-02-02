@@ -3,32 +3,46 @@
 #include <algorithm>
 #include <ranges>
 
-std::unique_ptr<Strategy> StrategyRegistry::CreateStrategy(std::string_view strategyName) {
+std::unique_ptr<Strategy> StrategyRegistry::createStrategy(std::string_view strategyName) {
     std::unique_ptr<Strategy> strategy = nullptr;
-    auto it = StrategyMap().find(strategyName);
+   
+    const auto& list = strategyMetadataList();
+    auto it = std::find_if(list.begin(), list.end(),
+                [strategyName](const auto& strategyMetadata){ return strategyName == strategyMetadata.name; });
 
-    if(it != StrategyMap().end())
-        strategy = it->second();
-    
+    if (it != list.end()) {
+        strategy = it->create();
+    };
+
     return strategy;
 }
 
-const std::vector<std::string_view>& StrategyRegistry::StrategyNames() {
-    static std::vector<std::string_view> kStrategyNames;
-    if(kStrategyNames.empty()) {
-        kStrategyNames.reserve(StrategyMap().size());
-        for(const auto& [name, _]: StrategyMap())
-            kStrategyNames.push_back(name);
-    }
-    
-    return kStrategyNames;
-}
-
-const std::unordered_map<std::string_view, std::function<std::unique_ptr<Strategy>()>>& StrategyRegistry::StrategyMap() {
-    static const std::unordered_map<std::string_view, std::function<std::unique_ptr<Strategy>()>> kStrategyMap = {
-        { StrategySMA::Name(), []{ return std::make_unique<StrategySMA>(); } },
-        { StrategyEngulfing::Name(), []{ return std::make_unique<StrategyEngulfing>(); } }
+const std::vector<StrategyInfo>& StrategyRegistry::strategyInfos() {
+    static std::vector<StrategyInfo> strategyInfos;
+    if(strategyInfos.empty()) {
+        strategyInfos.reserve(strategyMetadataList().size());
+        for(const auto& metadata: strategyMetadataList()) {
+            strategyInfos.push_back({metadata.name, metadata.description});
+        }
     };
     
-    return kStrategyMap;
+    return strategyInfos;
+}
+
+const std::vector<StrategyMetadata>& StrategyRegistry::strategyMetadataList() {
+    static const std::vector<StrategyMetadata> kStrategyMetadataList = {
+        makeStrategyMetadata<StrategySMA>(),
+        makeStrategyMetadata<StrategyEngulfing>()
+    };
+    
+    return kStrategyMetadataList;
+}
+
+template<typename T>
+StrategyMetadata StrategyRegistry::makeStrategyMetadata() noexcept {
+    return {
+        T::staticName(),
+        [](){ T::staticDescription(); },
+        [](){ return std::make_unique<T>(); }
+    };
 }

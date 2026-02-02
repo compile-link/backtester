@@ -15,11 +15,17 @@ class StrategySMA: public Strategy {
         explicit StrategySMA(size_t p = kDefaultPeriod) noexcept;
         Signal onCandle(const Candle& candle) override; 
 
-        // Strategy name on class
-        static std::string_view Name() noexcept { return "Simple Moving Average (SMA)"; } 
-        //
         // Strategy name enabling polymorphism
-        std::string_view name() const noexcept override { return Name(); } 
+        std::string_view name() const noexcept override { return staticName(); } 
+        
+        // Strategy name can be called on class
+        static std::string_view staticName() noexcept { return "Simple Moving Average (SMA)"; } 
+
+        // Strategy description enabling polymorphism
+        void description() const noexcept override { return staticDescription(); };
+
+        // Strategy description can be called on class
+        static void staticDescription() noexcept;
 
     private:
         static constexpr size_t kDefaultPeriod = 14;
