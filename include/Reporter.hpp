@@ -5,6 +5,7 @@
 #include "PositionManager.hpp"
 
 #include <string>
+#include <optional>
 
 class Reporter {
     public:
@@ -15,8 +16,6 @@ class Reporter {
             PositionManagerSnapshot positionManagerSnapshot, 
             WalletSnapshot walletSnapshot
         ) noexcept;
-
-        // void onEvent(const Event& e);
 
     private:
         std::string_view dataFileName_;

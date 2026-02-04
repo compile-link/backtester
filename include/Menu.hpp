@@ -37,4 +37,6 @@ class Menu {
         void printDataFileSettingsOptions() const; 
         void clear() const noexcept;
         void printHeader() const noexcept;
+        
+        bool chooseOption(int& option) const;
 };

@@ -48,8 +48,10 @@ MenuState Menu::showMainMenu(bool& startBacktest) {
     std::cout << "3) Exit\n\n";
     
     while (state == MenuState::Main) {
-        std::cout << "Choose option: ";
-        std::cin >> option;
+
+        if(!chooseOption(option)) {
+            continue;
+        }
 
         switch (option) {
             case 1:
@@ -81,8 +83,10 @@ MenuState Menu::showSettings() {
     std::cout << "0) Back\n\n";
 
     while (state == MenuState::Settings) {
-        std::cout << "Choose option: ";
-        std::cin >> option;
+
+        if(!chooseOption(option)) {
+            continue;
+        }
 
         switch (option) {
             case 1:
@@ -108,7 +112,10 @@ MenuState Menu::showStrategySettings() {
     printStrategySettingsOptions();
 
     while(true) {
-        std::cin >> option;
+
+        if(!chooseOption(option)) {
+            continue;
+        }
         
         if(option == 0) {
             return MenuState::Settings;
@@ -132,8 +139,7 @@ void Menu::printStrategySettingsOptions() const {
     
     std::cout << "Selected: " << config_.strategyInfo.name << "\n\n"; 
     config_.strategyInfo.description();
-
-    std::cout << "\nChoose option: ";
+    std::cout << "\n";
 }
 
 MenuState Menu::showDataFileSettings() {
@@ -142,7 +148,10 @@ MenuState Menu::showDataFileSettings() {
     printDataFileSettingsOptions();
 
     while(true) {
-        std::cin >> option;
+        if(!chooseOption(option)) {
+            continue;
+        }
+
         if(option == 0) {
             return MenuState::Settings;
         }
@@ -163,8 +172,7 @@ void Menu::printDataFileSettingsOptions() const {
     }
     std::cout << "0) Back\n\n";
 
-    std::cout << "Selected: " << config_.dataFileName << "\n";
-    std::cout << "\nChoose option: ";
+    std::cout << "Selected: " << config_.dataFileName << "\n\n";
 }
 
 // Requires terminal to support ANSI escape codes
@@ -177,4 +185,19 @@ void Menu::printHeader() const noexcept {
     std::cout << "------------------------------\n";
     std::cout << "--------  Backtester  --------\n";
     std::cout << "------------------------------\n";
+}
+
+bool Menu::chooseOption(int& option) const {
+    std::cout << "Choose option: ";
+    
+    if(!(std::cin >> option)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input, try again.\n";
+        return false;
+    }
+    
+    // Disregard the rest of the line to avoid leftover characters affecting the next read
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    return true;
 }
