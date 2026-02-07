@@ -181,7 +181,6 @@ void Menu::clear() const noexcept {
 }
 
 void Menu::printHeader() const noexcept {
-    std::cout << "\n";
     std::cout << "------------------------------\n";
     std::cout << "--------  Backtester  --------\n";
     std::cout << "------------------------------\n";

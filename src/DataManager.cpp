@@ -76,8 +76,6 @@ bool DataManager::loadData(const std::string fileName) {
     }
 
     file.close();
-    
-    std::cout << "Done!\n";
 
     return !candles_.empty();
 }
