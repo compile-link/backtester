@@ -23,8 +23,8 @@ struct StrongMove {
 
 class StrategyEngulfing : public Strategy {
     public:
-        StrategyEngulfing(size_t minLength = kMoveMinLength) noexcept: strongMove_(minLength) {}
-        Signal onCandle(const Candle& candle) override; 
+        StrategyEngulfing(size_t moveMinLength = kMoveMinLength) noexcept: Strategy(kDefaultRiskReward), strongMove_(moveMinLength) {}
+        Signal onCandle(const Candle& candle, std::optional<double>& stopLoss) override; 
         
         // Strategy name enabling polymorphism
         std::string_view name() const noexcept override { return staticName(); } 
@@ -40,5 +40,7 @@ class StrategyEngulfing : public Strategy {
         
     private:
         static const size_t kMoveMinLength = 2;
+        static constexpr double kDefaultRiskReward = 0.5;
+
         StrongMove strongMove_;
 };

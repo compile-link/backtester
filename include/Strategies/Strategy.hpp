@@ -13,18 +13,20 @@ enum class Signal {
 
 struct StrategySnapshot {
     std::string_view strategyName;
-    std::optional<double> riskPerTrade;
+    std::optional<double> riskReward;
 };
 
 class Strategy {
     public:
-        virtual Signal onCandle(const Candle& candle) = 0; 
+        Strategy(std::optional<double> rr = std::nullopt): kRiskReward(rr) {}
+        virtual Signal onCandle(const Candle& candle, std::optional<double>& stopLoss) = 0; 
         virtual std::string_view name() const noexcept = 0;
         virtual void description() const noexcept = 0;
+        const std::optional<double>& getRiskReward() const noexcept { return kRiskReward; }
+        StrategySnapshot getSnapshot() const noexcept { return StrategySnapshot { name(), kRiskReward }; }
+
         virtual ~Strategy() = default;
-        const std::optional<double>& getRiskPerTrade() const noexcept { return riskPerTrade_; }
-        StrategySnapshot getSnapshot() const noexcept { return StrategySnapshot { name(), riskPerTrade_ }; }
         
     protected:
-        std::optional<double> riskPerTrade_ = std::nullopt;
+        const std::optional<double> kRiskReward = std::nullopt;
     };

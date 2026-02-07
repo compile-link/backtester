@@ -20,13 +20,20 @@ void Reporter::summary() {
         std::cout << "Win Rate: " << winRate << "%\n";
     }
     
-    std::string riskPerTrade = "Unlimited";
+    std::string riskPerTrade;
     if (riskPerTrade_)
-        riskPerTrade = std::to_string(*riskPerTrade_ * 100.0) + "%";
+        riskPerTrade = std::to_string(*riskPerTrade_) + "%";
     else    
         riskPerTrade = "Unlimited";
+    
+    std::cout << "Risk Per Trade: " << riskPerTrade + "\n";
+    
 
-    std::cout << "Risk per Trade: " << riskPerTrade << "\n";
+    if (riskReward_) {
+        std::cout << "Risk/Reward Ratio: " << std::to_string(*riskReward_) << "\n";
+    }
+
+    // std::cout << "Risk per Trade: " << riskPerTrade << "\n";
     std::cout << "Initial Balance: " << std::fixed << std::setprecision(2) << initialBalance_ << "\n";
     std::cout << "End Balance: " << std::fixed << std::setprecision(2) << endBalance_ << "\n";
     std::cout << "PnL: " << std::fixed << std::setprecision(2) << pnL_ << "\n";
@@ -47,12 +54,13 @@ void Reporter::collectData(
 
     // Strategy Data
     strategyName_ = strategySnapshot.strategyName;
-    riskPerTrade_ = strategySnapshot.riskPerTrade;
+    riskReward_ = strategySnapshot.riskReward;
     
     // PositionManager Data
     tradeCount_ = positionManagerSnapshot.tradeCount;
     winCount_ = positionManagerSnapshot.winCount;
     lossCount_ = positionManagerSnapshot.lossCount;
+    riskPerTrade_ = positionManagerSnapshot.riskPerTrade; 
 
     // Wallet Data
     initialBalance_ = walletSnapshot.initialBalance;

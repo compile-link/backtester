@@ -1,20 +1,30 @@
 #include "Strategies/StrategyEngulfing.hpp"
 
 #include <iostream>
+#include <algorithm>
 
-Signal StrategyEngulfing::onCandle(const Candle& candle) {
+Signal StrategyEngulfing::onCandle(const Candle& candle, std::optional<double>& stopLoss) {
     Signal signal = Signal::Wait;
     if(strongMove_.isComplete() && strongMove_.isEngulfing(candle)) {
         switch (strongMove_.direction) {
-            case MoveDirection::Bull: 
+            case MoveDirection::Bull: {
                 signal = Signal::Sell;
+                auto it = std::max_element(strongMove_.candles.begin(), strongMove_.candles.end(),
+                            [](const Candle& a, const Candle& b) { return a.high < b.high; });
+                stopLoss = std::max(it->high, candle.high);
                 break;
-            case MoveDirection::Bear: 
+            }
+            case MoveDirection::Bear: { 
                 signal = Signal::Buy;
+                auto it = std::min_element(strongMove_.candles.begin(), strongMove_.candles.end(),
+                            [](const Candle& a, const Candle& b) { return a.low < b.low; });
+                stopLoss = std::min(it->low, candle.low);
                 break;
-            default:
+            }
+            default: {
                 signal = Signal::Wait;
                 break;
+            }
         }
     };
 

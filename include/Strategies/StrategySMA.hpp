@@ -13,7 +13,7 @@ enum class CandleCloseSide {
 class StrategySMA: public Strategy {
     public:
         explicit StrategySMA(size_t p = kDefaultPeriod) noexcept;
-        Signal onCandle(const Candle& candle) override; 
+        Signal onCandle(const Candle& candle, std::optional<double>& stopLoss) override; 
 
         // Strategy name enabling polymorphism
         std::string_view name() const noexcept override { return staticName(); } 

@@ -8,11 +8,12 @@ int main(int argc, char* argv[]) {
     try {
         std::string_view dataDir = (argc > 1) ? argv[1] : "";
         DataManager dataManager(dataDir);
+        PositionManager positionManager{};
         Reporter reporter;
 
         BacktestContext ctx = {
             dataManager,
-            PositionManager{},
+            positionManager,
             reporter
         };
         Backtester backtester(ctx);

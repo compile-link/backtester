@@ -3,7 +3,7 @@
 
 StrategySMA::StrategySMA(size_t p) noexcept: period_(p) {}
 
-Signal StrategySMA::onCandle(const Candle& candle) {
+Signal StrategySMA::onCandle(const Candle& candle, std::optional<double>& stopLoss) {
 
     Signal signal = Signal::Wait;
     updateSMA(candle);
