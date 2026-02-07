@@ -12,7 +12,6 @@ enum class CandleCloseSide {
 
 class StrategySMA: public Strategy {
     public:
-        explicit StrategySMA(size_t p = kDefaultPeriod) noexcept;
         Signal onCandle(const Candle& candle, std::optional<double>& stopLoss) override; 
 
         // Strategy name enabling polymorphism
@@ -29,9 +28,8 @@ class StrategySMA: public Strategy {
 
     private:
         static constexpr size_t kDefaultPeriod = 14;
-        size_t period_ = 0;
         std::vector<double> smaPoints_; 
-        double sma_ = 0;
+        double sma_ = 0.0;
         CandleCloseSide prevCloseSide_ = CandleCloseSide::Uninitialized; 
         
         void updateSMA(const Candle& candle);

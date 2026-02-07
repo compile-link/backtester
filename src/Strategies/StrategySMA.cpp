@@ -1,14 +1,12 @@
 #include "Strategies/StrategySMA.hpp"
 #include <iostream>
 
-StrategySMA::StrategySMA(size_t p) noexcept: period_(p) {}
-
 Signal StrategySMA::onCandle(const Candle& candle, std::optional<double>& stopLoss) {
 
     Signal signal = Signal::Wait;
     updateSMA(candle);
 
-    if(sma_ < 0.0) return signal;
+    if(sma_ <= 0.0) return signal;
 
     CandleCloseSide currCloseSide = 
         (candle.close - sma_ > 0.0) ? CandleCloseSide::BuySide : CandleCloseSide::SellSide; 
@@ -23,17 +21,17 @@ Signal StrategySMA::onCandle(const Candle& candle, std::optional<double>& stopLo
 
 void StrategySMA::updateSMA(const Candle& candle){
     smaPoints_.push_back(candle.close);
-    if(smaPoints_.size() < period_)
+    if(smaPoints_.size() < kDefaultPeriod)
         return;
 
-    if(smaPoints_.size() > period_)
+    if(smaPoints_.size() > kDefaultPeriod)
         smaPoints_.erase(smaPoints_.begin());
     
     double sum = 0.0;
     for(const auto& point : smaPoints_)
         sum += point;
     
-    sma_ = sum / period_;
+    sma_ = sum / kDefaultPeriod;
 }
 
 void StrategySMA::staticDescription() noexcept {
