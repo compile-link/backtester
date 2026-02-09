@@ -15,3 +15,7 @@ WalletSnapshot Wallet::getSnapshot() const noexcept {
         balance_ - kInitialBalance
     };
 }
+
+void Wallet::reset() noexcept {
+    balance_ = kInitialBalance;
+}

@@ -6,13 +6,11 @@ Backtester::Backtester(BacktestContext& ctx)
 
 void Backtester::run() {
     Signal signal;
-    // size_t index = 0;
     std::optional<double> stopLoss;
     for(const auto& candle : dataManager_.getCandles()){
         stopLoss = std::nullopt;
         signal = strategy_->onCandle(candle, stopLoss);
         positionManager_.onCandle(candle, signal, stopLoss);
-        // ++index;
     }
 
     reporter_.collectData(
@@ -21,5 +19,6 @@ void Backtester::run() {
         positionManager_.getSnapshot(),
         positionManager_.getWalletSnapshot()
     );
-
+    
+    positionManager_.reset();
 }

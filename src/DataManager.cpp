@@ -39,10 +39,14 @@ bool DataManager::loadData(const std::string fileName) {
         throw std::out_of_range("Data file not initialized: " + fileName);
     }
     auto path = dataFile->second.string();
-    dataFileName_ = dataFile->second.filename().string();
-    
-    // std::cout << "------------------------------\n";
-    // std::cout << "Reading file " << dataFileName_ << "...   ";
+    auto name = dataFile->second.filename().string();
+    if (dataFileName_ == name) {
+        // Data file reused
+        return false;
+    }
+
+    dataFileName_ = name;
+    candles_.clear();
     
     std::ifstream file(path);
     if(!file.is_open()) {
@@ -52,7 +56,6 @@ bool DataManager::loadData(const std::string fileName) {
     std::string line;
 
     std::getline(file, line); // skip header
-    // std::cout << line << "\n";
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string data;

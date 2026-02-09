@@ -11,6 +11,7 @@ class Wallet {
         explicit Wallet(double balance = kDefaultInitialBalance);
         bool updateBalance(double priceChange, double sizeFactor);
         WalletSnapshot getSnapshot() const noexcept;
+        void reset() noexcept; 
 
     private:
         static constexpr double kDefaultInitialBalance = 10000;

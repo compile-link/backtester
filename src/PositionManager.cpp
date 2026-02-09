@@ -18,7 +18,7 @@ bool PositionManager::closeShort(const double price){
 }
 
 void PositionManager::onCandle(const Candle& candle, const Signal& signal, const std::optional<double> stopLoss) {
-    if (isRiskUnlimited()) {
+    if (hasStopAndTarget()) {
         if (position_.isOpen && (signal == Signal::Buy || signal == Signal::Sell)) {
             closePosition(candle.close);
         } 
@@ -35,7 +35,7 @@ void PositionManager::onCandle(const Candle& candle, const Signal& signal, const
             case Signal::Wait:
                 break;
         }
-    } else if (!isRiskUnlimited()) {
+    } else if (!hasStopAndTarget()) {
         bool slHit = false;
         bool tpHit = false;
         slHit = (*position_.stopLoss >= candle.low && *position_.stopLoss <= candle.high);
@@ -110,4 +110,13 @@ PositionManagerSnapshot PositionManager::getSnapshot() const noexcept {
 
 WalletSnapshot PositionManager::getWalletSnapshot() const noexcept {
     return wallet_.getSnapshot(); 
+}
+
+
+void PositionManager::reset() noexcept {
+    tradeCount_ = 0;
+    winCount_ = 0;
+    lossCount_ = 0;
+    wallet_.reset();
+    position_.reset();
 }

@@ -14,6 +14,10 @@ enum class PositionType {
 };
 
 struct Position {
+    Position() {
+        reset();
+    }
+
     double openPrice;
     double closePrice;
     std::optional<double> stopLoss;
@@ -32,6 +36,16 @@ struct Position {
             change*=-1.0;
         
         return change;
+    }
+    
+    void reset() noexcept {
+        openPrice = 0.0;
+        closePrice = 0.0;
+        sizeFactor = 1.0;
+        stopLoss = std::nullopt;
+        profitTarget = std::nullopt;
+        type = PositionType::Undefined;
+        isOpen = false;
     }
 
 };
@@ -59,6 +73,7 @@ class PositionManager{
         
         PositionManagerSnapshot getSnapshot() const noexcept;
         WalletSnapshot getWalletSnapshot() const noexcept; 
+        void reset() noexcept;        
 
     private:
         static constexpr double kDefaultRiskPerTrade = 1.0; // Percentage    
@@ -75,6 +90,5 @@ class PositionManager{
 
         bool openPosition(const PositionType type, const double price, const std::optional<double> stopLoss = std::nullopt, const double sizeFactor = 1.0);
         bool closePosition(const double price);
-        bool isRiskUnlimited() const noexcept { return (!position_.stopLoss.has_value() || !position_.profitTarget.has_value()); }
-        
+        bool hasStopAndTarget() const noexcept { return (!position_.stopLoss.has_value() || !position_.profitTarget.has_value()); }
 };
