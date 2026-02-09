@@ -57,19 +57,24 @@ void PositionManager::onCandle(const Candle& candle, const Signal& signal, const
 }
 
 bool PositionManager::openPosition(const PositionType type, const double price, const std::optional<double> stopLoss, const double sizeFactor) {
-// bool PositionManager::openPosition(const double price, const std::optional<double> stopLoss, const double sizeFactor) {
-    if (position_.isOpen){ 
-        // std::cout << "Not opening new position, already open\n";
+    if (position_.isOpen || price <= 0.0) {
         return false;
     }
 
-    // std::cout << "Opening new position\n";
     position_.isOpen = true;
     position_.type = type;
     position_.openPrice = price;
+    if (!stopLoss) {
+        position_.stopLoss = std::nullopt;
+        position_.profitTarget = std::nullopt;
+    } else {
     position_.stopLoss = stopLoss;
-    if (position_.stopLoss.has_value() && riskReward_.has_value()) {
-        position_.profitTarget = (price - *stopLoss) / *riskReward_;
+        double risk = price - *stopLoss;
+        if (riskReward_ && *riskReward_ > 0.0 && risk != 0.0) {
+            position_.profitTarget = price + (risk / *riskReward_);
+        } else {
+            position_.profitTarget = std::nullopt;
+        }
     }
 
     position_.sizeFactor = sizeFactor;
@@ -83,9 +88,8 @@ bool PositionManager::closePosition(const double price){
         return false;
     }
 
-    // std::cout << "Closing position\n";
     position_.isOpen = false;
-    // position_.closePrice = price;
+    position_.closePrice = price;
     tradeCount_++;
 
     if(position_.openPrice < price) {
@@ -95,8 +99,13 @@ bool PositionManager::closePosition(const double price){
         if(position_.type == PositionType::Long) lossCount_++;
         else winCount_++; 
     }
+    std::optional<double> pcp = position_.priceChangePercentage();
+    bool result = false;
+    if(pcp) {
+        result = wallet_.updateBalance(*pcp, position_.sizeFactor);
+    }
 
-    return wallet_.updateBalance(position_.priceChangePercentage(), position_.sizeFactor);
+    return result;
 }
 
 PositionManagerSnapshot PositionManager::getSnapshot() const noexcept {

@@ -26,10 +26,10 @@ struct Position {
     PositionType type = PositionType::Undefined;
     bool isOpen = false;
     
-    double priceChangePercentage() const {
-        if(isOpen) return 0.0;
+    std::optional<double> priceChangePercentage() const {
+        if(isOpen || openPrice <= 0.0 || closePrice <= 0.0) return std::nullopt;
 
-        double change = (closePrice - openPrice)/openPrice;
+        double change = (closePrice - openPrice) / openPrice;
         
         // flip sign if short
         if(type == PositionType::Short) 
