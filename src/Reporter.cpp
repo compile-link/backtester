@@ -34,9 +34,19 @@ void Reporter::summary() {
     }
 
     // std::cout << "Risk per Trade: " << riskPerTrade << "\n";
-    std::cout << "Initial Balance: " << std::fixed << std::setprecision(2) << initialBalance_ << "\n";
-    std::cout << "End Balance: " << std::fixed << std::setprecision(2) << endBalance_ << "\n";
-    std::cout << "PnL: " << std::fixed << std::setprecision(2) << pnL_ << "\n";
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(2) << initialBalance_;
+    std::cout << "Initial Balance: " << oss.str() << "\n";
+
+    oss.str("");
+    oss.clear();
+    oss << std::fixed << std::setprecision(2) << endBalance_;
+    std::cout << "End Balance: " << oss.str() << "\n";
+
+    oss.str("");
+    oss.clear();
+    oss << std::fixed << std::setprecision(2) << pnL_;
+    std::cout << "PnL: " << oss.str() << "\n";
     std::cout << "------------------------------\n";
 }
 
