@@ -9,12 +9,12 @@ struct WalletSnapshot {
 class Wallet {
     public:
         explicit Wallet(double balance = kDefaultInitialBalance);
-        bool updateBalance(double priceChange, double sizeFactor);
+        void updateBalance(double change) noexcept;
         WalletSnapshot getSnapshot() const noexcept;
         void reset() noexcept; 
 
     private:
-        static constexpr double kDefaultInitialBalance = 10000;
+        static constexpr double kDefaultInitialBalance = 10000.0;
         const double kInitialBalance;
         double balance_;
 };

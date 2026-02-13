@@ -68,7 +68,7 @@ bool PositionManager::openPosition(const PositionType type, const double price, 
         position_.stopLoss = std::nullopt;
         position_.profitTarget = std::nullopt;
     } else {
-    position_.stopLoss = stopLoss;
+        position_.stopLoss = stopLoss;
         double risk = price - *stopLoss;
         if (riskReward_ && *riskReward_ > 0.0 && risk != 0.0) {
             position_.profitTarget = price + (risk / *riskReward_);
@@ -92,20 +92,35 @@ bool PositionManager::closePosition(const double price){
     position_.closePrice = price;
     tradeCount_++;
 
+    bool isLoss = false;
     if(position_.openPrice < price) {
-        if(position_.type == PositionType::Long) winCount_++;
-        else lossCount_++; 
+        if(position_.type == PositionType::Long) {
+            winCount_++;
+        } else {
+            lossCount_++; 
+            isLoss = true;
+        }
     } else {
-        if(position_.type == PositionType::Long) lossCount_++;
-        else winCount_++; 
-    }
-    std::optional<double> pcp = position_.priceChangePercentage();
-    bool result = false;
-    if(pcp) {
-        result = wallet_.updateBalance(*pcp, position_.sizeFactor);
+        if(position_.type == PositionType::Long) {
+            lossCount_++;
+            isLoss = true;
+        } else {
+            winCount_++; 
+        }
     }
 
-    return result;
+    std::optional<double> change = std::nullopt;
+    if (riskPerTrade_ && riskReward_ && !position_.isOpen) {
+        change = isLoss ? -*riskPerTrade_ / 100.0 : (*riskPerTrade_ / *riskReward_) / 100.0;
+    } else {
+        change = position_.priceChangePercentage();
+    };
+
+    if(change) {
+        wallet_.updateBalance(*change);
+    };
+
+    return true;
 }
 
 PositionManagerSnapshot PositionManager::getSnapshot() const noexcept {

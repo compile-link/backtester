@@ -2,10 +2,8 @@
 
 Wallet::Wallet(double balance): balance_(balance), kInitialBalance(balance) {}
 
-bool Wallet::updateBalance(double priceChange, double sizeFactor) {
-    balance_ += sizeFactor * priceChange * balance_;
-
-    return true;
+void Wallet::updateBalance(double change) noexcept {
+    balance_ += change * balance_;
 }
 
 WalletSnapshot Wallet::getSnapshot() const noexcept {
