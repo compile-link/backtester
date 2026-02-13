@@ -40,6 +40,7 @@ Sell signal: bearish engulfing candle.\n";
 } 
 
 void StrongMove::update(const Candle& candle) {
+    if (candle.open == candle.close) return;
     MoveDirection candleDirection = (candle.open < candle.close) ? MoveDirection::Bull : MoveDirection::Bear;   
 
     if (candles.empty()) {
@@ -56,14 +57,16 @@ void StrongMove::update(const Candle& candle) {
 
 bool StrongMove::isEngulfing(const Candle& candle) const noexcept {
     if (candles.empty()) return false;
+    if (candle.open == candle.close) return false;
+
     const Candle& prev = candles.back();
 
     MoveDirection candleDirection = (candle.open < candle.close) ? MoveDirection::Bull : MoveDirection::Bear;   
     
     if(candleDirection == this->direction) return false;
 
-    bool isEngulfing = (candle.open <= prev.close && candle.close >= prev.open) ||
-                       (candle.open >= prev.close && candle.close <= prev.open);
+    bool isEngulfing = (candleDirection == MoveDirection::Bull && candle.open <= prev.close && candle.close > prev.open) ||
+                       (candleDirection == MoveDirection::Bear && candle.open >= prev.close && candle.close < prev.open);
         
     return isEngulfing;
 }
