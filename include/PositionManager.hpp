@@ -68,6 +68,8 @@ class PositionManager{
             riskReward_ = rr; 
             if (!riskReward_) {
                 riskPerTrade_ = std::nullopt; 
+            } else {
+                riskPerTrade_ = kDefaultRiskPerTrade;
             }
         }
         
