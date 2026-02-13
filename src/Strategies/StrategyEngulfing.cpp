@@ -65,8 +65,8 @@ bool StrongMove::isEngulfing(const Candle& candle) const noexcept {
     
     if(candleDirection == this->direction) return false;
 
-    bool isEngulfing = (candleDirection == MoveDirection::Bull && candle.open <= prev.close && candle.close > prev.open) ||
-                       (candleDirection == MoveDirection::Bear && candle.open >= prev.close && candle.close < prev.open);
+    bool isEngulfing = (candleDirection == MoveDirection::Bull && candle.close > prev.open) ||
+                       (candleDirection == MoveDirection::Bear && candle.close < prev.open);
         
     return isEngulfing;
 }
