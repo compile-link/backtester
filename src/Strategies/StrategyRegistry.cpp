@@ -1,7 +1,6 @@
 #include "Strategies/StrategyRegistry.hpp"
 
 #include <algorithm>
-#include <ranges>
 
 std::unique_ptr<Strategy> StrategyRegistry::createStrategy(std::string_view strategyName) {
     std::unique_ptr<Strategy> strategy = nullptr;
