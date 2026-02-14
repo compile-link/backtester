@@ -96,8 +96,8 @@ std::vector<std::string> DataManager::dataFileNames() const {
 DataManagerSnapshot DataManager::getSnapshot() const noexcept {
     return {
         dataFileName_,
-        candles_.front().date, 
-        candles_.back().date,
+        candles_.empty() ? std::string_view{"N/A"} : std::string_view{candles_.front().date},
+        candles_.empty() ? std::string_view{"N/A"} : std::string_view{candles_.back().date},
         candles_.size()
     };
 }
