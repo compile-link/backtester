@@ -92,5 +92,5 @@ class PositionManager{
 
         bool openPosition(const PositionType type, const double price, const std::optional<double> stopLoss = std::nullopt, const double sizeFactor = 1.0);
         bool closePosition(const double price);
-        bool hasStopAndTarget() const noexcept { return (!position_.stopLoss.has_value() || !position_.profitTarget.has_value()); }
+        bool hasStopAndTarget() const noexcept { return (position_.stopLoss.has_value() && position_.profitTarget.has_value()); }
 };
