@@ -55,27 +55,45 @@ bool DataManager::loadData(const std::string fileName) {
 
     std::string line;
 
-    std::getline(file, line); // skip header
+    // skip header
+    if (!std::getline(file, line) || line.empty()) {
+        throw std::runtime_error("Missing header in " + fileName);
+    }
+
+    size_t lineNo = 1;
     while (std::getline(file, line)) {
+        ++lineNo;
+        if (line.empty()) continue;
+
         std::stringstream ss(line);
         std::string data;
-        Candle candle;
+        Candle candle{};
 
-        std::getline(ss, candle.date, ','); 
+        auto parseDouble = [&](double& out) -> bool {
+            try {
+                if (!std::getline(ss, data, ',')) {
+                    return false;
+                }
+                // remove trailing whitespace
+                data.erase(data.find_last_not_of(" \t\n\r\f\v") + 1);
+                size_t index = 0;
+                out = std::stod(data, &index);
+                return (index == data.size());
+            } catch (...) {
+                return false;
+            }
+        };
 
-        std::getline(ss, data, ','); 
-        candle.open = std::stod(data);
+        if ((!std::getline(ss, candle.date, ',') || candle.date.empty()) ||
+             !parseDouble(candle.open) ||
+             !parseDouble(candle.high) ||
+             !parseDouble(candle.low) ||
+             !parseDouble(candle.close))
+        {
+            throw std::runtime_error("Data load failed " + fileName + ":" + std::to_string(lineNo));
+        };
 
-        std::getline(ss, data, ','); 
-        candle.high = std::stod(data);
-
-        std::getline(ss, data, ','); 
-        candle.low = std::stod(data);
-
-        std::getline(ss, data, ','); 
-        candle.close = std::stod(data);
-
-        candles_.push_back(candle);
+        candles_.push_back(std::move(candle));
     }
 
     file.close();
