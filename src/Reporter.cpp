@@ -46,7 +46,7 @@ void Reporter::summary() {
     oss.str("");
     oss.clear();
     oss << std::fixed << std::setprecision(2) << pnL_;
-    std::cout << "PnL: " << oss.str() << "\n";
+    std::cout << "Realized PnL: " << oss.str() << "\n";
     std::cout << "------------------------------\n";
 }
 

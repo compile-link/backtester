@@ -4,7 +4,7 @@ A console app for backtesting trading strategies. Provides menu-driven configura
 
 ## Overview
 
-Backtests selected strategy based on selected dataset. Upon finishing prints summary (strategy and data file name, win rate, balance, PnL etc.). Initial default configuration can be changed in menu
+Backtests selected strategy based on selected dataset. Upon finishing prints summary (strategy and data file name, win rate, balance, realized PnL etc.). Initial default configuration can be changed in menu
 
 ## Strategies
 
