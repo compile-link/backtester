@@ -83,17 +83,16 @@ bool PositionManager::openPosition(const PositionType type, const double price, 
 }
 
 bool PositionManager::closePosition(const double price){
-    if (!position_.isOpen){
-        // std::cout << "Not closing position, already closed\n";
-        return false;
-    }
+    if (!position_.isOpen) return false;
 
     position_.isOpen = false;
     position_.closePrice = price;
     tradeCount_++;
 
+    if (position_.openPrice == position_.closePrice) return true;
+
     bool isLoss = false;
-    if(position_.openPrice < price) {
+    if (position_.openPrice < position_.closePrice) {
         if(position_.type == PositionType::Long) {
             winCount_++;
         } else {
