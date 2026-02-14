@@ -22,7 +22,6 @@ struct Position {
     double closePrice;
     std::optional<double> stopLoss;
     std::optional<double> profitTarget;
-    double sizeFactor; // Implies position size, eg. 1.0 uses full balance to open a position
     PositionType type = PositionType::Undefined;
     bool isOpen = false;
     
@@ -41,7 +40,6 @@ struct Position {
     void reset() noexcept {
         openPrice = 0.0;
         closePrice = 0.0;
-        sizeFactor = 1.0;
         stopLoss = std::nullopt;
         profitTarget = std::nullopt;
         type = PositionType::Undefined;
@@ -59,8 +57,8 @@ struct PositionManagerSnapshot {
 
 class PositionManager{
     public:
-        bool openLong(const double price, const std::optional<double> stopLoss = std::nullopt, const double sizeFactor = 1.0);
-        bool openShort(const double price, const std::optional<double> stopLoss = std::nullopt, const double sizeFactor = 1.0);
+        bool openLong(const double price, const std::optional<double> stopLoss = std::nullopt);
+        bool openShort(const double price, const std::optional<double> stopLoss = std::nullopt);
         bool closeLong(const double price);
         bool closeShort(const double price);
         void onCandle(const Candle& candle, const Signal& signal, const std::optional<double> stopLoss);
@@ -90,7 +88,7 @@ class PositionManager{
         size_t lossCount_ = 0;
         std::optional<double> riskPerTrade_ = kDefaultRiskPerTrade;
 
-        bool openPosition(const PositionType type, const double price, const std::optional<double> stopLoss = std::nullopt, const double sizeFactor = 1.0);
+        bool openPosition(const PositionType type, const double price, const std::optional<double> stopLoss = std::nullopt);
         bool closePosition(const double price);
         bool hasStopAndTarget() const noexcept { return (position_.stopLoss.has_value() && position_.profitTarget.has_value()); }
 };

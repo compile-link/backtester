@@ -1,12 +1,12 @@
 #include "PositionManager.hpp"
 #include <iostream>
 
-bool PositionManager::openLong(const double price, const std::optional<double> stopLoss, const double sizeFactor){
-    return openPosition(PositionType::Long, price, stopLoss, sizeFactor);
+bool PositionManager::openLong(const double price, const std::optional<double> stopLoss){
+    return openPosition(PositionType::Long, price, stopLoss);
 }
 
-bool PositionManager::openShort(const double price, const std::optional<double> stopLoss, const double sizeFactor){
-    return openPosition(PositionType::Short, price, stopLoss, sizeFactor);
+bool PositionManager::openShort(const double price, const std::optional<double> stopLoss){
+    return openPosition(PositionType::Short, price, stopLoss);
 }
 
 bool PositionManager::closeLong(const double price){
@@ -56,7 +56,7 @@ void PositionManager::onCandle(const Candle& candle, const Signal& signal, const
     }
 }
 
-bool PositionManager::openPosition(const PositionType type, const double price, const std::optional<double> stopLoss, const double sizeFactor) {
+bool PositionManager::openPosition(const PositionType type, const double price, const std::optional<double> stopLoss) {
     if (position_.isOpen || price <= 0.0) {
         return false;
     }
@@ -76,8 +76,6 @@ bool PositionManager::openPosition(const PositionType type, const double price, 
             position_.profitTarget = std::nullopt;
         }
     }
-
-    position_.sizeFactor = sizeFactor;
 
     return true;
 }
