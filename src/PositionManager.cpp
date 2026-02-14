@@ -18,8 +18,11 @@ bool PositionManager::closeShort(const double price){
 }
 
 void PositionManager::onCandle(const Candle& candle, const Signal& signal, const std::optional<double> stopLoss) {
-    if (!hasStopAndTarget()) {
-        if (position_.isOpen && (signal == Signal::Buy || signal == Signal::Sell)) {
+    if (!hasStopAndTarget() && position_.isOpen) {
+        if (
+            (signal == Signal::Buy && (position_.type == PositionType::Short)) ||
+            (signal == Signal::Sell && (position_.type == PositionType::Long))
+        ) {
             closePosition(candle.close);
         } 
     }
