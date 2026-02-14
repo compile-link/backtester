@@ -35,7 +35,8 @@ void StrategySMA::updateSMA(const Candle& candle){
 }
 
 void StrategySMA::staticDescription() noexcept {
-    std::cout << "Based on a " << kDefaultPeriod << "-period simple moving average.\n\
-Buy signal: price closes above the SMA.\n\
-Sell signal: price closes below the SMA.\n";
+    std::cout << "Based on a " << kDefaultPeriod << "-period simple moving average\n\
+Buy signal: price closes above the SMA\n\
+Sell signal: price closes below the SMA\n\
+Risk-managed mode is disabled\n";
 } 
