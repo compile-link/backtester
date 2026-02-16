@@ -4,7 +4,7 @@
 #include <sstream>
 #include <filesystem>
 
-DataManager::DataManager(std::string_view dataDir): dataDir_(dataDir) {
+DataManager::DataManager(std::string dataDir): dataDir_(dataDir) {
    if (!std::filesystem::exists(dataDir_)) {
        if (std::filesystem::exists("./data")) {
             dataDir_ = "./data";
@@ -20,8 +20,6 @@ void DataManager::scanDataDirectory() {
     if (!std::filesystem::exists(dataDir_)) {
         throw std::runtime_error("Data folder not found!");
     }
-
-    std::vector<std::filesystem::path> files;
     
     dataFilesMap_.clear();
     for (const auto& entry: std::filesystem::directory_iterator(dataDir_)) {

@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     try {
-        std::string_view dataDir = (argc > 1) ? argv[1] : "";
+        std::string dataDir = (argc > 1) ? argv[1] : "";
         DataManager dataManager(dataDir);
         PositionManager positionManager{};
         Reporter reporter;
