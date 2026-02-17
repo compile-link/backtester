@@ -48,11 +48,34 @@ cmake --build build
 ./build/backtester [<path/to/data-dir>]
 ```
 
+## Testing
+
+The project includes core unit tests for trading logic modules:
+
+- `DataManager`
+- `PositionManager`
+- `Wallet`
+
+### Build tests
+
+```bash
+cmake -S . -B build
+cmake --build build --target unit_tests
+```
+
+### Run tests
+```bash
+./build/unit_tests
+# or
+ctest --test-dir build --output-on-failure
+```
+
 ## Project Structure
 
 * src/ implementation files
 * include/ headers
 * data/ sample datasets
+* tests/ core unit tests
 * CMakeLists.txt build config
 
 ## Notes
