@@ -21,3 +21,24 @@ add_executable(backtester
  src/Menu.cpp
 )
 target_include_directories(backtester PRIVATE include)
+
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+	enable_testing()
+	find_package(GTest REQUIRED)
+	add_executable(unit_tests
+		tests/DataManager.test.cpp
+		src/DataManager.cpp
+		tests/Wallet.test.cpp
+		src/Wallet.cpp
+		tests/PositionManager.test.cpp
+		src/PositionManager.cpp
+		tests/BacktestFlow.integration.test.cpp
+	)
+	target_include_directories(unit_tests PRIVATE include)
+
+	target_link_libraries(unit_tests PRIVATE GTest::gtest_main)
+	include(GoogleTest)
+	gtest_discover_tests(unit_tests)
+	target_compile_definitions(unit_tests PRIVATE PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+endif()
