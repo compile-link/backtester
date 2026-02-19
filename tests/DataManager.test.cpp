@@ -21,8 +21,11 @@ namespace {
 }
 
 TEST(DataManager, ScanDataDirectoryNoFallbackThrows) {
+    const fs::path tempDir = fixturesDir / "temp";
+    ASSERT_TRUE(fs::exists(tempDir) || fs::create_directories(tempDir));
+
     // Change cwd to directory without data dir there and in its parent dir (prevent fallback)
-    ScopedCwd cwd(fixturesDir / "temp");
+    ScopedCwd cwd(tempDir);
     const fs::path nonExistentDataDir = fixturesDir / "non-existent";
     EXPECT_THROW(DataManager dm(nonExistentDataDir.string()), std::runtime_error);
 }
