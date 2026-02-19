@@ -2,14 +2,15 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 
-namespace fs = std::filesystem;
-
-const fs::path fixturesDir = fs::path(PROJECT_SOURCE_DIR) / "tests" / "fixtures";
-const fs::path validDataFile = fixturesDir / "valid.csv";
-const fs::path invalidDataFile = fixturesDir / "invalid.csv";
-const fs::path onlyHeaderDataFile = fixturesDir / "only-header.csv";
-
 namespace {
+    namespace fs = std::filesystem;
+
+    const fs::path fixturesDir = fs::path(PROJECT_SOURCE_DIR) / "tests" / "fixtures";
+    const fs::path validDataFile = fixturesDir / "valid.csv";
+    const fs::path invalidDataFile = fixturesDir / "invalid.csv";
+    const fs::path onlyHeaderDataFile = fixturesDir / "only-header.csv";
+
+
     class ScopedCwd {
         public:
             explicit ScopedCwd(const fs::path& p) : old_(fs::current_path()) { fs::current_path(p); }

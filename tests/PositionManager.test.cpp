@@ -1,7 +1,6 @@
 #include "PositionManager.hpp"
 #include <gtest/gtest.h>
 
-
 TEST(PositionManager, Snapshot) {
     PositionManager pm{};
     pm.setRisk(std::nullopt);
