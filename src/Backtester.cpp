@@ -5,6 +5,10 @@ Backtester::Backtester(BacktestContext& ctx)
     : dataManager_(ctx.dataManager), positionManager_(ctx.positionManager), reporter_(ctx.reporter) {}
 
 void Backtester::run() {
+    if (!strategy_) {
+        throw (std::runtime_error("Uninitialized strategy"));
+    }
+
     Signal signal;
     std::optional<double> stopLoss;
     for(const auto& candle : dataManager_.getCandles()){
