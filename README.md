@@ -6,6 +6,20 @@ A console app for backtesting trading strategies. Provides menu-driven configura
 
 Backtests selected strategy based on selected dataset. Upon finishing prints summary (strategy and data file name, win rate, balance, realized PnL etc.). Initial default configuration can be changed in menu
 
+## Screenshots
+
+### Main Menu
+![Main Menu](docs/main.png)
+
+### Strategy Selection
+![Strategy Selection](docs/strategy.png)
+
+### Data File Selection
+![Data File Selection](docs/data-file.png)
+
+### Summary
+![Summary](docs/summary.png)
+
 ## Requirements
 
 * CMake >= 3.15
@@ -76,6 +90,7 @@ ctest --test-dir build --output-on-failure
 * include/ headers
 * data/ sample datasets
 * tests/ core unit tests
+* docs/ screenshots
 * CMakeLists.txt build config
 
 ## Notes
