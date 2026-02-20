@@ -10,7 +10,7 @@
 
 struct BacktestContext {
     DataManager& dataManager;
-    PositionManager positionManager;
+    PositionManager& positionManager;
     Reporter& reporter;
 };
 
