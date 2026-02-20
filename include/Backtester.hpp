@@ -18,7 +18,7 @@ class Backtester {
     public:
         explicit Backtester(BacktestContext& ctx);
         void run();         
-        void setStrategy(std::unique_ptr<Strategy> strategy) { 
+        void configureStrategy(std::unique_ptr<Strategy> strategy) {
             strategy_ = std::move(strategy); 
             positionManager_.setRisk(strategy_ ? strategy_->getRiskReward() : std::nullopt);
         }

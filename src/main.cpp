@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
             menu.show(startBacktest);
             if(startBacktest){
                 std::unique_ptr<Strategy> strategy = StrategyRegistry::createStrategy(menu.config().strategyInfo.name);
-                backtester.setStrategy(std::move(strategy));
+                backtester.configureStrategy(std::move(strategy));
                 dataManager.loadData(menu.config().dataFileName);
                 backtester.run();
                 reporter.summary();
