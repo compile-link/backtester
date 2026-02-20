@@ -1,10 +1,29 @@
-# Backtester
+# Backtester (C++ CLI Trading Strategy Tester)
 
 A console app for backtesting trading strategies. Provides menu-driven configuration and summary report
 
 ## Overview
 
 Backtests selected strategy based on selected dataset. Upon finishing prints summary (strategy and data file name, win rate, balance, realized PnL etc.). Initial default configuration can be changed in menu
+
+## Requirements
+
+* CMake >= 3.15
+* C++17 compiler
+* Terminal supporting ANSI escape codes
+
+## Build
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+## Run
+
+```bash
+./build/backtester [<path/to/data-dir>]
+```
 
 ## Strategies
 
@@ -28,25 +47,6 @@ CSV data file (OHLC dataset) should have the following format
 Date,Open,High,Low,Close
 
 If the CLI data path is empty or invalid ./data is tried, then ../data
-
-## Requirements
-
-* CMake >= 3.15
-* C++17 compiler
-* Terminal supporting ANSI escape codes
-
-## Build
-
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
-## Run
-
-```bash
-./build/backtester [<path/to/data-dir>]
-```
 
 ## Testing
 
