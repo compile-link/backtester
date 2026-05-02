@@ -1,101 +1,83 @@
-# Backtester (C++ CLI Trading Strategy Tester)
+# Backtester
 
-A console app for backtesting trading strategies. Provides menu-driven configuration and summary report
+A C++17 CLI simulation engine for testing rule-based trading strategies against historical OHLC data. Built around a clean separation between data ingestion, strategy logic, position lifecycle, and balance accounting.
 
-## Overview
+---
 
-Backtests selected strategy based on selected dataset. Upon finishing prints summary (strategy and data file name, win rate, balance, realized PnL etc.). Initial default configuration can be changed in menu
-
-## Screenshots
-
-### Main Menu
 ![Main Menu](docs/main.png)
 
-### Strategy Selection
 ![Strategy Selection](docs/strategy.png)
 
-### Data File Selection
 ![Data File Selection](docs/data-file.png)
 
-### Summary
 ![Summary](docs/summary.png)
 
-## Requirements
+---
 
-* CMake >= 3.15
-* C++17 compiler
-* Terminal supporting ANSI escape codes
+## Architecture
 
-## Build
+**Simulation loop** - `Backtester::run()` iterates candles, calls `strategy_->onCandle()` to get a signal and optional stop-loss, then passes both to `positionManager_.onCandle()`. The loop itself contains no strategy logic and no position logic.
 
-```bash
-cmake -S . -B build
-cmake --build build
-```
+**Strategy interface** - `onCandle(candle, stopLoss)` returns a `Signal` and optionally sets a stop-loss by reference.
 
-## Run
+**Data layer** - `DataManager` handles CSV ingestion, OHLC parsing, and data directory resolution. It has no coupling to strategy or position logic.
 
-```bash
-./build/backtester [<path/to/data-dir>]
-```
+**Position and wallet** - `Wallet` is encapsulated inside `PositionManager`. Position lifecycle (open, close, direction, stop/target) and balance accounting are separated internally, which is reflected in the test coverage - each is tested independently via snapshots.
+
+---
+
+## Risk Model
+
+Two execution modes are supported, determined per strategy:
+
+**Price-change mode** - no stop-loss or position sizing. PnL is calculated as the percentage price change from open to close price. Used by SMA.
+
+**Risk-managed mode** - the strategy sets a stop-loss; `PositionManager` derives the profit target from `risk / riskReward`. PnL is applied as a fixed percentage of wallet balance (`riskPerTrade`), win or loss. Used by Engulfing.
+
+---
 
 ## Strategies
 
 ### Simple Moving Average (SMA)
 
-Based on a 14-period simple moving average
-Buy signal: price closes above the SMA
-Sell signal: price closes below the SMA
-Risk-managed mode is disabled
+14-period SMA. Long on close above SMA, short on close below. No position sizing - full balance per trade.
 
 ### Engulfing Candle
 
-Looks for strong moves in one direction followed by an engulfing candle in the opposite direction
-Buy signal: bullish engulfing candle
-Sell signal: bearish engulfing candle
-Risk-managed mode is enabled
+Looks for a sequence of same-direction candles followed by an engulfing candle in the opposite direction. Risk-managed sizing enabled.
 
-## Data Files and Directory
+---
 
-CSV data file (OHLC dataset) should have the following format
-Date,Open,High,Low,Close
+## Build
 
-If the CLI data path is empty or invalid ./data is tried, then ../data
+```
+cmake -S . -B build
+cmake --build build
+```
+
+**Requirements**
+
+* CMake >= 3.15
+* C++17 compiler
+* Terminal with ANSI escape code support
+
+---
+
+## Run
+
+```
+./build/backtester [<path/to/data-dir>]
+```
+
+If no path is provided, the engine tries `./data`, then `../data`. Data files must be CSV with the format `Date,Open,High,Low,Close`.
+
+---
 
 ## Testing
 
-The project includes core unit tests for trading logic modules:
+Unit tests cover `DataManager`, `PositionManager`, and `Wallet` - the stateful components where bugs compound across a simulation run.
 
-- `DataManager`
-- `PositionManager`
-- `Wallet`
-
-### Build tests
-
-```bash
-cmake -S . -B build
+```
 cmake --build build --target unit_tests
-```
-
-### Run tests
-```bash
 ./build/unit_tests
-# or
-ctest --test-dir build --output-on-failure
 ```
-
-## Project Structure
-
-* src/ implementation files
-* include/ headers
-* data/ sample datasets
-* tests/ core unit tests
-* docs/ screenshots
-* CMakeLists.txt build config
-
-## Notes
-
-* Initial wallet balance is 10000.0
-* Risk per trade is 1% of total balance for risk-managed strategies
-* Default risk:reward ratio is set to 1:2 for risk-managed strategies (implemented as kDefaultRiskReward = 0.5)
-* Strategy with disabled risk management opens a position every time with full balance according to received buy/sell signal and closes the previous one in opposite direction
